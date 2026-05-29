@@ -1,0 +1,27 @@
+# NetBeans
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
+build/
+nbbuild/
+dist/
+nbdist/
+
+# Maven
+target/
+
+# Variáveis de ambiente e segredos
+.env
+*.properties.local
+
+# Logs
+*.log
+
+# Arquivos de sistema Windows
+Thumbs.db
+desktop.ini
+
+# IDEs diversas (caso alguém use outro editor)
+.idea/
+*.iml
+.vscode/
