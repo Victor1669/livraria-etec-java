@@ -176,12 +176,11 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
         try {
             String nome = campoNome.getText();
             double salario = Double.parseDouble(campoSalario.getText());
-            double bonus = 0;
             String tipoFuncionario = selectTipoFuncionario.getSelectedItem().toString().toLowerCase();
 
             var novoFuncionario = tipoFuncionario.equals("gerente")
-                    ? new Gerente(nome, salario, bonus)
-                    : new Bibliotecario(nome, salario, bonus);
+                    ? new Gerente(nome, salario)
+                    : new Bibliotecario(nome, salario);
 
             return novoFuncionario;
         } catch (NumberFormatException e) {
