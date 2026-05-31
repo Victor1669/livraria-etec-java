@@ -1,10 +1,9 @@
 package com.victor1669.telas;
 
 import com.victor1669.conexoes.ConexaoMySQL;
-
-import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.List;
+import com.victor1669.ui.ScreenManager;
+import com.victor1669.ui.Tela;
+import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
@@ -16,32 +15,19 @@ public final class TelaInicial extends javax.swing.JPanel {
 
     public TelaInicial() {
         initComponents();
-
         configureLinks();
-
     }
 
     void configureLinks() {
-        JButton[] links = {emprestimoLink, funcionarioLink, livroLink, pagamentoLink, usuariosLink};
-        String[] nomesPaginas = {"EMPRESTIMO", "FUNCIONARIO", "LIVROS", "PAGAMENTO", "CONSULTA"};
-        ArrayList<Dimension> tamanhos = new ArrayList<>(List.of(
-                new Dimension(954, 532),
-                new Dimension(772, 562),
-                new Dimension(772, 562),
-                new Dimension(683, 539),
-                new Dimension(551, 607)
-        ));
+        Map<JButton, Tela> conexoes = Map.of(
+                emprestimoLink, Tela.EMPRESTIMO,
+                funcionarioLink, Tela.FUNCIONARIO,
+                livroLink, Tela.LIVROS,
+                pagamentoLink, Tela.PAGAMENTO,
+                usuariosLink, Tela.CONSULTA
+        );
 
-        for (int c = 0; c < links.length; c++) {
-            JButton link = links[c];
-            String nomePagina = nomesPaginas[c];
-            Dimension novoTamanho = tamanhos.get(c);
-
-            link.addActionListener(e -> {
-                MainForm.mostrarTela(nomePagina);
-                MainForm.resizeTela(novoTamanho);
-            });
-        }
+        ScreenManager.vincularBotoes(conexoes);
     }
 
     @SuppressWarnings("unchecked")
@@ -137,8 +123,6 @@ public final class TelaInicial extends javax.swing.JPanel {
                 System.exit(0);
             });
         }
-
-
     }//GEN-LAST:event_resetDatabaseActionPerformed
 
 

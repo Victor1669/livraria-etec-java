@@ -1,15 +1,19 @@
 package com.victor1669.telas;
 
+import com.victor1669.models.Funcionario;
 import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Funcionario;
 import com.victor1669.classes.Gerente;
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.FuncionarioDAO;
-
+import com.victor1669.daos.PagamentoDAO;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.victor1669.ui.ScreenManager;
+import com.victor1669.ui.Tela;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,12 +21,43 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Victor1669
  */
-public final class FuncionarioPanel extends javax.swing.JPanel {
+public final class TelaFuncionarios extends javax.swing.JPanel {
 
-    public FuncionarioPanel() {
+    List<Funcionario> lista;
+
+    public TelaFuncionarios() {
         initComponents();
 
-        atualizarTabela();
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+                atualizarTabela();
+            }
+
+        });
+
+    }
+
+    public void atualizarTabela() {
+        try {
+            Connection conn = ConexaoMySQL.getInstancia().getConexao();
+            FuncionarioDAO fdao = new FuncionarioDAO(conn);
+
+            lista = fdao.selecionarTodos();
+
+            String[] colunas = {"Nome", "Cargo"};
+            DefaultTableModel model = new DefaultTableModel(colunas, 0);
+
+            for (Funcionario f : lista) {
+                Object[] linha = {f.getNome(), f.getTipoFuncionario()};
+                model.addRow(linha);
+            }
+
+            tabelaFuncionarios.setModel(model);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -65,6 +100,7 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
         pagamentoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         pagamentoButton.setForeground(new java.awt.Color(255, 0, 0));
         pagamentoButton.setText("Pagamento");
+        pagamentoButton.addActionListener(this::pagamentoButtonActionPerformed);
 
         cadastroButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         cadastroButton.setText("Cadastrar");
@@ -81,7 +117,22 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
             new String [] {
                 "Nome", "Cargo"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabelaFuncionarios.setShowGrid(false);
         scrollTabelaFuncionarios.setViewportView(tabelaFuncionarios);
 
@@ -146,7 +197,7 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
-        MainForm.voltarTelaInicial();
+        ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
@@ -165,6 +216,7 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
 
             JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
 
+            limparFormulario();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
         }
@@ -190,26 +242,32 @@ public final class FuncionarioPanel extends javax.swing.JPanel {
 
     }
 
-    public void atualizarTabela() {
+    void limparFormulario() {
+        campoNome.setText("");
+        campoSalario.setText("");
+        selectTipoFuncionario.setSelectedIndex(0);
+
+        campoNome.requestFocus();
+    }
+
+    private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
+        int linhaSelecionada = tabelaFuncionarios.getSelectedRow();
+
+        Funcionario f = lista.get(linhaSelecionada);
+
         try {
             Connection conn = ConexaoMySQL.getInstancia().getConexao();
-            FuncionarioDAO fdao = new FuncionarioDAO(conn);
 
-            List<Funcionario> lista = fdao.selecionarTodos();
+            PagamentoDAO pdao = new PagamentoDAO(conn);
 
-            String[] colunas = {"Nome", "Cargo"};
-            DefaultTableModel model = new DefaultTableModel(colunas, 0);
+            pdao.pagar(f);
 
-            for (Funcionario f : lista) {
-                Object[] linha = {f.getNome(), f.getTipoFuncionario()};
-                model.addRow(linha);
-            }
-
-            tabelaFuncionarios.setModel(model);
+            JOptionPane.showMessageDialog(null, "Pagamento realizado com sucesso!");
         } catch (SQLException e) {
-
+            JOptionPane.showMessageDialog(null, "Erro ao pagar funcionário " + f.getNome() + ": " + e.getMessage());
         }
-    }
+    }//GEN-LAST:event_pagamentoButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;

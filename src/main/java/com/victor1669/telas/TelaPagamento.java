@@ -1,14 +1,36 @@
 package com.victor1669.telas;
 
+import com.victor1669.conexoes.ConexaoMySQL;
+import com.victor1669.daos.PagamentoDAO;
+import com.victor1669.models.Pagamento;
+import com.victor1669.ui.ScreenManager;
+import com.victor1669.ui.Tela;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Victor1669
  */
-public final class Pagamento extends javax.swing.JPanel {
+public final class TelaPagamento extends javax.swing.JPanel {
 
-    public Pagamento() {
+    public TelaPagamento() {
         initComponents();
 
+        addComponentListener(new ComponentAdapter(){
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+                atualizarTabela();
+            }
+        
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -16,8 +38,8 @@ public final class Pagamento extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        scrollTabelaPagamentos = new javax.swing.JScrollPane();
+        tabelaPagamentos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         totalLabel = new javax.swing.JLabel();
@@ -29,21 +51,34 @@ public final class Pagamento extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Extrato de Pagamento");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaPagamentos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "ID_Funcionario", "Total pago"
             }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        scrollTabelaPagamentos.setViewportView(tabelaPagamentos);
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setText("Processar Pagamento");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -74,7 +109,7 @@ public final class Pagamento extends javax.swing.JPanel {
                                     .addComponent(jLabel2)
                                     .addGap(18, 18, 18)
                                     .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(scrollTabelaPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(215, 215, 215)
                         .addComponent(jLabel1)))
@@ -88,7 +123,7 @@ public final class Pagamento extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollTabelaPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
@@ -99,17 +134,43 @@ public final class Pagamento extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        MainForm.voltarTelaInicial();
+        ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+       
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    void atualizarTabela(){
+        try {
+            Connection conn = ConexaoMySQL.getInstancia().getConexao();
+            PagamentoDAO pdao = new PagamentoDAO(conn);
+            
+            List<Pagamento> lista = pdao.selecionarTodos();
+            
+            String[] colunas = {"ID","ID_Funcionario", "Total pago"};
+            DefaultTableModel model = new DefaultTableModel(colunas, 0);
+            
+            for (Pagamento p : lista) {                
+                Object[] linha = {p.getId(), p.getId_funcionario(), p.getValorTotal()};
+                model.addRow(linha);
+            }
+            
+            tabelaPagamentos.setModel(model);
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+        }
+        
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane scrollTabelaPagamentos;
+    private javax.swing.JTable tabelaPagamentos;
     private javax.swing.JLabel totalLabel;
     // End of variables declaration//GEN-END:variables
 }

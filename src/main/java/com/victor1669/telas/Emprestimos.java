@@ -1,5 +1,8 @@
 package com.victor1669.telas;
 
+import com.victor1669.ui.ScreenManager;
+import com.victor1669.ui.Tela;
+
 /**
  *
  * @author Victor1669
@@ -190,7 +193,7 @@ public final class Emprestimos extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
-        MainForm.voltarTelaInicial();
+        ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
 

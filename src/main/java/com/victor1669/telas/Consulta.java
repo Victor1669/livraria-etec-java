@@ -1,6 +1,6 @@
 package com.victor1669.telas;
 
-import com.victor1669.components.BackButton;
+import com.victor1669.ui.BackButton;
 import javax.swing.JTable;
 
 

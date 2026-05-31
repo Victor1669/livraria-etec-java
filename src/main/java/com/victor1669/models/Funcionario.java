@@ -1,24 +1,27 @@
-package com.victor1669.classes;
+package com.victor1669.models;
 
 import com.victor1669.interfaces.IPagamento;
 
 /**
- * 
+ *
  * @author Victor1669
- * 
+ *
  * Regra de negócio:
- * 
- * - Cada funcionário deve ter nome, salário e seu tipo;
- * - O bônus salarial deve ser relativo ao salário, tendo a variável FATOR_BONUS para calcular ele
- * - Esta classe deve implementar IPagamento para a realização do pagamento com o bônus
- * 
+ *
+ * - Cada funcionário deve ter nome, salário e seu tipo; - O bônus salarial deve
+ * ser relativo ao salário, tendo a variável FATOR_BONUS para calcular ele -
+ * Esta classe deve implementar IPagamento para a realização do pagamento com o
+ * bônus
+ *
  */
 public abstract class Funcionario implements IPagamento {
+
+    protected int id;
 
     protected String nome;
     protected double salario;
     protected String tipoFuncionario;
-    
+
     protected double bonus;
     protected double FATOR_BONUS = 0;
 
@@ -29,6 +32,14 @@ public abstract class Funcionario implements IPagamento {
     }
 
     // ==================== GETTERS E SETTERS ====================
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setFATOR_BONUS(double FATOR_BONUS) {
         this.FATOR_BONUS = FATOR_BONUS;
     }

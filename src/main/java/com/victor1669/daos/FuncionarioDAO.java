@@ -1,12 +1,14 @@
 package com.victor1669.daos;
 
 import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Funcionario;
+import com.victor1669.models.Funcionario;
 import com.victor1669.classes.Gerente;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +30,6 @@ public class FuncionarioDAO {
         ps.setString(4, funcionario.getTipoFuncionario());
 
         ps.executeUpdate();
-        System.out.println("Funcionário inserido com sucesso!");
-
     }
 
     public List<Funcionario> selecionarTodos() throws SQLException {
@@ -46,13 +46,14 @@ public class FuncionarioDAO {
                     ? new Gerente()
                     : new Bibliotecario();
 
+            f.setId(rs.getInt("id"));
             f.setNome(rs.getString("nome"));
             f.setSalario(rs.getDouble("salario"));
-            f.setBonus(rs.getDouble("bonus"));
             f.setTipoFuncionario(tipoFuncionario);
 
             lista.add(f);
         }
+        
         return lista;
     }
 }

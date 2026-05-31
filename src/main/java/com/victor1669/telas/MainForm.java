@@ -1,60 +1,48 @@
 package com.victor1669.telas;
 
-// VARIÁVEIS DE AMBIENTE
 import io.github.cdimascio.dotenv.Dotenv;
-
-// VISUAL
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import javax.swing.JPanel;
-
-// MIGRATIONS
 import org.flywaydb.core.Flyway;
-
-// BANCO
 import java.sql.SQLException;
 import com.victor1669.conexoes.*;
+import com.victor1669.ui.ScreenManager;
+import com.victor1669.ui.Tela;
 
+/**
+ *
+ * @author Victor1669
+ */
 public class MainForm extends javax.swing.JFrame {
 
-    public static CardLayout cardLayout;
-    public static JPanel container;
-    static MainForm instancia;
+    private static CardLayout cardLayout;
+    private static JPanel container;
 
-    // ==================== UTILITÁRIOS PARA MUDANÇA DE TELA ====================
-    public static void mostrarTela(String nomeTela) {
-        instancia.setTitle(nomeTela);
-
-        cardLayout.show(container, nomeTela);
+    public MainForm() {
+        initComponents();
+        mountComponents();
     }
 
-    public static void resizeTela(Dimension novoTamanho) {
-        instancia.setSize(novoTamanho);
-        instancia.setLocationRelativeTo(null);
-        instancia.revalidate();
-        instancia.repaint();
-    }
+    final void mountComponents() {
+        setLocationRelativeTo(null);
 
-    public static void voltarTelaInicial() {
-        cardLayout.show(MainForm.container, "TELA_INICIAL");
-        instancia.setTitle("Livraria ETEC");
-        resizeTela(new Dimension(430, 580));
-    }
+        cardLayout = new CardLayout();
+        container = new JPanel(cardLayout);
 
-    // ==================== INICIALIZAÇÃO ====================
-    public static void main(String args[]) {
-        connectMySQL();
+        container.add(new TelaInicial(), Tela.INICIAL.getNome());
+        container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
+        container.add(new TelaPagamento(), Tela.PAGAMENTO.getNome());
+        container.add(new Livros(), Tela.LIVROS.getNome());
+        container.add(new Emprestimos(), Tela.EMPRESTIMO.getNome());
+        container.add(new Consulta(), Tela.CONSULTA.getNome());
+        container.add(new Usuarios(), Tela.USUARIOS.getNome());
 
-        MainForm form = new MainForm();
+        getContentPane().setLayout(new BorderLayout());
+        add(container, BorderLayout.CENTER);
 
-        instancia = form;
-
-        java.awt.EventQueue.invokeLater(() -> form.setVisible(true));
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ConexaoMySQL.getInstancia().fecharConexao();
-        }));
+        ScreenManager.inicializar(this, container, cardLayout);
+        ScreenManager.navegarPara(Tela.INICIAL);
     }
 
     static final void connectMySQL() {
@@ -67,6 +55,7 @@ public class MainForm extends javax.swing.JFrame {
         Flyway flyway = Flyway.configure()
                 .dataSource(url, usuario, senha)
                 .locations("classpath:db/migration")
+                .baselineOnMigrate(true)
                 .load();
         flyway.migrate();
 
@@ -80,11 +69,16 @@ public class MainForm extends javax.swing.JFrame {
         }
     }
 
-    public MainForm() {
-        initComponents();
+    public static void main(String args[]) {
+        connectMySQL();
 
-        mountComponents();
+        MainForm form = new MainForm();
 
+        java.awt.EventQueue.invokeLater(() -> form.setVisible(true));
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ConexaoMySQL.getInstancia().fecharConexao();
+        }));
     }
 
     @SuppressWarnings("unchecked")
@@ -108,27 +102,6 @@ public class MainForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    final void mountComponents() {
-        setLocationRelativeTo(null);
-
-        cardLayout = new CardLayout();
-        container = new JPanel(cardLayout);
-
-        container.add(new TelaInicial(), "TELA_INICIAL");
-        container.add(new FuncionarioPanel(), "FUNCIONARIO");
-        container.add(new Pagamento(), "PAGAMENTO");
-        container.add(new Livros(), "LIVROS");
-        container.add(new Emprestimos(), "EMPRESTIMO");
-        container.add(new Consulta(), "CONSULTA");
-        container.add(new Usuarios(), "USUARIOS");
-
-        cardLayout.show(container, "TELA_INICIAL");
-
-        getContentPane().setLayout(new BorderLayout());
-
-        add(container, BorderLayout.CENTER);
-    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

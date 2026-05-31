@@ -1,6 +1,5 @@
-package com.victor1669.components;
+package com.victor1669.ui;
 
-import com.victor1669.telas.MainForm;
 import javax.swing.JButton;
 
 public final class BackButton extends JButton {
@@ -19,7 +18,7 @@ public final class BackButton extends JButton {
     void mountButton() {
         setBounds(30, 30, 50, 30);
         addActionListener(e -> {
-            MainForm.voltarTelaInicial();
+            ScreenManager.navegarPara(Tela.INICIAL);
         });
     }
 

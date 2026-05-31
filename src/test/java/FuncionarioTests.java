@@ -1,6 +1,6 @@
 
 import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Funcionario;
+import com.victor1669.models.Funcionario;
 import com.victor1669.classes.Gerente;
 
 import org.junit.jupiter.api.*;
@@ -15,9 +15,6 @@ public class FuncionarioTests {
 
     static Funcionario bibliotecario;
     static Funcionario gerente;
-
-    public FuncionarioTests() {
-    }
 
     @BeforeEach
     public void setUpClass() {
