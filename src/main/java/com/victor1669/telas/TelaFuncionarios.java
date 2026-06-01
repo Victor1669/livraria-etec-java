@@ -1,11 +1,10 @@
 package com.victor1669.telas;
 
 import com.victor1669.models.Funcionario;
-import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Gerente;
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.FuncionarioDAO;
 import com.victor1669.daos.PagamentoDAO;
+import com.victor1669.services.FuncionarioService;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -201,9 +200,15 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
-        Funcionario f = validarFuncionario();
+        FuncionarioService service = new FuncionarioService();
+        Funcionario f = service.criarFuncionario(
+                campoNome.getText(),
+                campoSalario.getText(),
+                selectTipoFuncionario.getSelectedItem().toString()
+        );
 
         if (f == null) {
+            JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
             return;
         }
 
@@ -216,39 +221,19 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
             JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
 
-            limparFormulario();
+            campoNome.setText("");
+            campoSalario.setText("");
+            selectTipoFuncionario.setSelectedIndex(0);
+
+            campoNome.requestFocus();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
+            return;
         }
 
         atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
-    Funcionario validarFuncionario() {
-        try {
-            String nome = campoNome.getText();
-            double salario = Double.parseDouble(campoSalario.getText());
-            String tipoFuncionario = selectTipoFuncionario.getSelectedItem().toString().toLowerCase();
-
-            var novoFuncionario = tipoFuncionario.equals("gerente")
-                    ? new Gerente(nome, salario)
-                    : new Bibliotecario(nome, salario);
-
-            return novoFuncionario;
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Todos os campos devem ter valores válidos!");
-            return null;
-        }
-
-    }
-
-    void limparFormulario() {
-        campoNome.setText("");
-        campoSalario.setText("");
-        selectTipoFuncionario.setSelectedIndex(0);
-
-        campoNome.requestFocus();
-    }
 
     private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
         int linhaSelecionada = tabelaFuncionarios.getSelectedRow();

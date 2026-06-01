@@ -7,55 +7,42 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- *
- * @author Victor1669
- */
-public class PagamentoDAO {
-
-    private final Connection conn;
+public class PagamentoDAO extends AbstractGenericDAO<Pagamento, Integer> {
 
     public PagamentoDAO(Connection conn) {
-        this.conn = conn;
+        super(conn, "pagamentos");
     }
 
     public void pagar(Funcionario f) throws SQLException {
-        String query = "INSERT INTO pagamentos (id_funcionario, totalPago) VALUES (?, ?)";
 
-        int id_funcionario = f.getId();
-        
         f.setFATOR_BONUS(f.getTipoFuncionario().equals("gerente") ? 0.1 : 0.2);
         f.calcularBonus();
         double totalPago = f.processarPagamento();
 
-        PreparedStatement ps = conn.prepareStatement(query);
-        ps.setInt(1, id_funcionario);
-        ps.setDouble(2, totalPago);
+        Pagamento pagamento = new Pagamento();
+        pagamento.setId_funcionario(f.getId());
+        pagamento.setValorTotal((int) totalPago);
 
-        ps.executeUpdate();
+        inserir(pagamento);
     }
 
-    public List<Pagamento> selecionarTodos() throws SQLException {
-        String query = "SELECT * FROM pagamentos";
+    @Override
+    protected String gerarStringDeInsert() {
+        return "INSERT INTO pagamentos (id_funcionario, totalPago) VALUES (?, ?)";
+    }
 
-        PreparedStatement stmt = conn.prepareStatement(query);
-        ResultSet rs = stmt.executeQuery();
+    @Override
+    protected void configurarParametrosDeInsert(PreparedStatement ps, Pagamento pagamento) throws SQLException {
+        ps.setInt(1, pagamento.getId_funcionario());
+        ps.setDouble(2, pagamento.getValorTotal());
+    }
 
-        List<Pagamento> lista = new ArrayList<>();
+    @Override
+    protected Pagamento transformarLinhaSQLEmObjeto(ResultSet rs) throws SQLException {
+        int id = rs.getInt("id");
+        int idFuncionario = rs.getInt("id_funcionario");
+        int valorTotal = rs.getInt("totalPago");
 
-        while (rs.next()) {
-            int id_funcionario = rs.getInt("id_funcionario");
-            int valorTotal = rs.getInt("totalPago");
-            int id = rs.getInt("id");
-
-            Pagamento p = new Pagamento(id, id_funcionario, valorTotal);
-
-            lista.add(p);
-        }
-
-        return lista;
+        return new Pagamento(id, idFuncionario, valorTotal);
     }
 }

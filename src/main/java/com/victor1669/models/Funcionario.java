@@ -1,6 +1,7 @@
 package com.victor1669.models;
 
 import com.victor1669.interfaces.IPagamento;
+import java.util.Objects;
 
 /**
  *
@@ -29,6 +30,51 @@ public abstract class Funcionario implements IPagamento {
         bonus = getSalario() * FATOR_BONUS;
 
         return bonus;
+    }
+
+    @Override
+    public String toString() {
+        return "["
+                + "id=\"" + id
+                + "\", nome=\"" + nome
+                + "\", salario=\"" + salario
+                + "\", tipoFuncionario=\"" + tipoFuncionario
+                + "\", bonus=\"" + bonus
+                + "\", FATOR_BONUS=\"" + FATOR_BONUS
+                + "\"]";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Funcionario other = (Funcionario) obj;
+        if (Double.doubleToLongBits(this.salario) != Double.doubleToLongBits(other.salario)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.bonus) != Double.doubleToLongBits(other.bonus)) {
+            return false;
+        }
+        if (Double.doubleToLongBits(this.FATOR_BONUS) != Double.doubleToLongBits(other.FATOR_BONUS)) {
+            return false;
+        }
+        if (!Objects.equals(this.nome, other.nome)) {
+            return false;
+        }
+        return Objects.equals(this.tipoFuncionario, other.tipoFuncionario);
     }
 
     // ==================== GETTERS E SETTERS ====================

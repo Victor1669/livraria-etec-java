@@ -23,13 +23,13 @@ public final class TelaPagamento extends javax.swing.JPanel {
     public TelaPagamento() {
         initComponents();
 
-        addComponentListener(new ComponentAdapter(){
+        addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
                 super.componentShown(e);
                 atualizarTabela();
             }
-        
+
         });
     }
 
@@ -40,7 +40,6 @@ public final class TelaPagamento extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         scrollTabelaPagamentos = new javax.swing.JScrollPane();
         tabelaPagamentos = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         totalLabel = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
@@ -76,10 +75,6 @@ public final class TelaPagamento extends javax.swing.JPanel {
         });
         scrollTabelaPagamentos.setViewportView(tabelaPagamentos);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setText("Processar Pagamento");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Total Geral");
@@ -100,16 +95,14 @@ public final class TelaPagamento extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jButton2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(scrollTabelaPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(totalLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(scrollTabelaPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(215, 215, 215)
                         .addComponent(jLabel1)))
@@ -120,9 +113,7 @@ public final class TelaPagamento extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
                 .addComponent(scrollTabelaPagamentos, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -137,35 +128,34 @@ public final class TelaPagamento extends javax.swing.JPanel {
         ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    void atualizarTabela(){
+    void atualizarTabela() {
         try {
             Connection conn = ConexaoMySQL.getInstancia().getConexao();
             PagamentoDAO pdao = new PagamentoDAO(conn);
-            
+
             List<Pagamento> lista = pdao.selecionarTodos();
-            
-            String[] colunas = {"ID","ID_Funcionario", "Total pago"};
+
+            int total = lista.stream().mapToInt(Pagamento::getValorTotal).sum();
+
+            totalLabel.setText(Integer.toString(total));
+
+            String[] colunas = {"ID", "ID_Funcionario", "Total pago"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
-            
-            for (Pagamento p : lista) {                
+
+            for (Pagamento p : lista) {
                 Object[] linha = {p.getId(), p.getId_funcionario(), p.getValorTotal()};
                 model.addRow(linha);
             }
-            
+
             tabelaPagamentos.setModel(model);
-            
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
         }
-        
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
