@@ -26,7 +26,6 @@ public class ScreenManager {
         instancia.setTitle(tela.getNome().equals("TELA_INICIAL") ? "Livraria ETEC" : tela.getNome());
         cardLayout.show(container, tela.getNome());
         
-        instancia.setSize(tela.getTamanho());
         instancia.setLocationRelativeTo(null);
         instancia.revalidate();
         instancia.repaint();

@@ -23,14 +23,15 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cadastroButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="devolucao1" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
+              <Component id="devolucao1" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="62" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="cancelarButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="devolucao" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="devolucao" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="cancelarButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cadastroButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

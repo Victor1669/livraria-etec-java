@@ -1,5 +1,4 @@
 package com.victor1669.telas;
-
 import io.github.cdimascio.dotenv.Dotenv;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -10,12 +9,7 @@ import com.victor1669.conexoes.*;
 import com.victor1669.ui.ScreenManager;
 import com.victor1669.ui.Tela;
 
-/**
- *
- * @author Victor1669
- */
 public class MainForm extends javax.swing.JFrame {
-
     private static CardLayout cardLayout;
     private static JPanel container;
 
@@ -26,39 +20,31 @@ public class MainForm extends javax.swing.JFrame {
 
     final void mountComponents() {
         setLocationRelativeTo(null);
-
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
-
         container.add(new TelaInicial(), Tela.INICIAL.getNome());
         container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
         container.add(new TelaPagamento(), Tela.PAGAMENTO.getNome());
-        container.add(new Livros(), Tela.LIVROS.getNome());
-        container.add(new Emprestimos(), Tela.EMPRESTIMO.getNome());
-        container.add(new Consulta(), Tela.CONSULTA.getNome());
-        container.add(new Usuarios(), Tela.USUARIOS.getNome());
-
+        container.add(new TelaLivros(), Tela.LIVROS.getNome());
+        container.add(new TelaEmprestimos(), Tela.EMPRESTIMO.getNome());
+        container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
         getContentPane().setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
-
         ScreenManager.inicializar(this, container, cardLayout);
         ScreenManager.navegarPara(Tela.INICIAL);
     }
 
     static final void connectMySQL() {
         Dotenv dotenv = Dotenv.load();
-
         String url = dotenv.get("DB_URL");
         String usuario = dotenv.get("DB_USER");
         String senha = dotenv.get("DB_PASSWORD");
-
         Flyway flyway = Flyway.configure()
                 .dataSource(url, usuario, senha)
                 .locations("classpath:db/migration")
                 .baselineOnMigrate(true)
                 .load();
         flyway.migrate();
-
         ConexaoMySQL conexaoMySQL = new ConexaoMySQL("localhost:3306", "livrariaJava", usuario, senha);
         try {
             conexaoMySQL.conectar();
@@ -72,9 +58,10 @@ public class MainForm extends javax.swing.JFrame {
     public static void main(String args[]) {
         connectMySQL();
 
-        MainForm form = new MainForm();
-
-        java.awt.EventQueue.invokeLater(() -> form.setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> {
+            MainForm form = new MainForm();
+            form.setVisible(true);
+        });
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             ConexaoMySQL.getInstancia().fecharConexao();
@@ -87,13 +74,15 @@ public class MainForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Livraria ETEC");
+        setPreferredSize(new java.awt.Dimension(954, 532));
         setResizable(false);
+        setSize(new java.awt.Dimension(954, 532));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 430, Short.MAX_VALUE)
+            .addGap(0, 524, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

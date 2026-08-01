@@ -16,7 +16,7 @@ public final class BackButton extends JButton {
     }
 
     void mountButton() {
-        setBounds(30, 30, 50, 30);
+        setBounds(30, 10, 50, 30);
         addActionListener(e -> {
             ScreenManager.navegarPara(Tela.INICIAL);
         });
