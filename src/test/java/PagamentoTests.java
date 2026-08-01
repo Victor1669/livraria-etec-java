@@ -1,5 +1,5 @@
 
-import com.victor1669.models.Pagamento;
+import com.victor1669.models.PagamentoModel;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,11 +10,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class PagamentoTests {
 
-    Pagamento pagamento;
+    PagamentoModel pagamento;
 
     @BeforeEach
     public void setUp() {
-        pagamento = new Pagamento(1, 1, 1650);
+        pagamento = new PagamentoModel(1, 1, 1650);
     }
 
     @Test

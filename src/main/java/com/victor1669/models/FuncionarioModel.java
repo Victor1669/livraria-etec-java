@@ -15,7 +15,7 @@ import java.util.Objects;
  * bônus
  *
  */
-public abstract class Funcionario implements IPagamento {
+public abstract class FuncionarioModel implements IPagamento {
 
     protected int id;
 
@@ -61,7 +61,7 @@ public abstract class Funcionario implements IPagamento {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Funcionario other = (Funcionario) obj;
+        final FuncionarioModel other = (FuncionarioModel) obj;
         if (Double.doubleToLongBits(this.salario) != Double.doubleToLongBits(other.salario)) {
             return false;
         }

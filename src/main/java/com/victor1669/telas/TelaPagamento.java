@@ -2,7 +2,7 @@ package com.victor1669.telas;
 
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.PagamentoDAO;
-import com.victor1669.models.Pagamento;
+import com.victor1669.models.PagamentoModel;
 import com.victor1669.ui.ScreenManager;
 import com.victor1669.ui.Tela;
 import java.awt.event.ComponentAdapter;
@@ -129,16 +129,16 @@ public final class TelaPagamento extends javax.swing.JPanel {
             Connection conn = ConexaoMySQL.getInstancia().getConexao();
             PagamentoDAO pdao = new PagamentoDAO(conn);
 
-            List<Pagamento> lista = pdao.selecionarTodos();
+            List<PagamentoModel> lista = pdao.selecionarTodos();
 
-            int total = lista.stream().mapToInt(Pagamento::getValorTotal).sum();
+            int total = lista.stream().mapToInt(PagamentoModel::getValorTotal).sum();
 
             totalLabel.setText(Integer.toString(total));
 
             String[] colunas = {"ID", "ID_Funcionario", "Total pago"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
-            for (Pagamento p : lista) {
+            for (PagamentoModel p : lista) {
                 Object[] linha = {p.getId(), p.getId_funcionario(), p.getValorTotal()};
                 model.addRow(linha);
             }

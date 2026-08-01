@@ -1,8 +1,8 @@
 package com.victor1669.classes;
 
-import com.victor1669.models.Funcionario;
+import com.victor1669.models.FuncionarioModel;
 
-public class Gerente extends Funcionario {
+public class Gerente extends FuncionarioModel {
 
     public Gerente(String nome, double salario) {
         this.nome = nome;

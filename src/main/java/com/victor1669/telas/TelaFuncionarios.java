@@ -1,6 +1,6 @@
 package com.victor1669.telas;
 
-import com.victor1669.models.Funcionario;
+import com.victor1669.models.FuncionarioModel;
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.FuncionarioDAO;
 import com.victor1669.daos.PagamentoDAO;
@@ -22,7 +22,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public final class TelaFuncionarios extends javax.swing.JPanel {
 
-    List<Funcionario> lista;
+    List<FuncionarioModel> lista;
 
     public TelaFuncionarios() {
         initComponents();
@@ -36,27 +36,6 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
         });
 
-    }
-
-    public void atualizarTabela() {
-        try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-            FuncionarioDAO fdao = new FuncionarioDAO(conn);
-
-            lista = fdao.selecionarTodos();
-
-            String[] colunas = {"Nome", "Cargo"};
-            DefaultTableModel model = new DefaultTableModel(colunas, 0);
-
-            for (Funcionario f : lista) {
-                Object[] linha = {f.getNome(), f.getTipoFuncionario()};
-                model.addRow(linha);
-            }
-
-            tabelaFuncionarios.setModel(model);
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -198,7 +177,7 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         FuncionarioService service = new FuncionarioService();
-        Funcionario f = service.criarFuncionario(
+        FuncionarioModel f = service.criarFuncionario(
                 campoNome.getText(),
                 campoSalario.getText(),
                 selectTipoFuncionario.getSelectedItem().toString()
@@ -231,11 +210,31 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
         atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
+    public void atualizarTabela() {
+        try {
+            Connection conn = ConexaoMySQL.getInstancia().getConexao();
+            FuncionarioDAO fdao = new FuncionarioDAO(conn);
+
+            lista = fdao.selecionarTodos();
+
+            String[] colunas = {"Nome", "Cargo"};
+            DefaultTableModel model = new DefaultTableModel(colunas, 0);
+
+            for (FuncionarioModel f : lista) {
+                Object[] linha = {f.getNome(), f.getTipoFuncionario()};
+                model.addRow(linha);
+            }
+
+            tabelaFuncionarios.setModel(model);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+        }
+    }
 
     private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
         int linhaSelecionada = tabelaFuncionarios.getSelectedRow();
 
-        Funcionario f = lista.get(linhaSelecionada);
+        FuncionarioModel f = lista.get(linhaSelecionada);
 
         try {
             Connection conn = ConexaoMySQL.getInstancia().getConexao();

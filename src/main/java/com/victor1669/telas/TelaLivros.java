@@ -1,7 +1,21 @@
 package com.victor1669.telas;
 
+import com.victor1669.conexoes.ConexaoMySQL;
+import com.victor1669.daos.LivroDAO;
+import com.victor1669.models.LivroModel;
+import com.victor1669.services.LivroService;
 import com.victor1669.ui.ScreenManager;
 import com.victor1669.ui.Tela;
+
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+import java.util.List;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -9,8 +23,19 @@ import com.victor1669.ui.Tela;
  */
 public final class TelaLivros extends javax.swing.JPanel {
 
+    List<LivroModel> lista;
+
     public TelaLivros() {
         initComponents();
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                super.componentShown(e);
+                atualizarTabela();
+            }
+
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -21,11 +46,11 @@ public final class TelaLivros extends javax.swing.JPanel {
         cadastroButton = new javax.swing.JButton();
         cancelarButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabelaLivros = new javax.swing.JTable();
         jLabel2 = new javax.swing.JLabel();
-        nomeEmprestimo = new java.awt.TextField();
+        campoNome = new java.awt.TextField();
         jLabel3 = new javax.swing.JLabel();
-        nomeEmprestimo1 = new java.awt.TextField();
+        campoAutor = new java.awt.TextField();
 
         setBackground(new java.awt.Color(204, 204, 204));
 
@@ -36,33 +61,33 @@ public final class TelaLivros extends javax.swing.JPanel {
 
         cadastroButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         cadastroButton.setText("Cadastrar");
+        cadastroButton.addActionListener(this::cadastroButtonActionPerformed);
 
         cancelarButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         cancelarButton.setText("Cancelar");
         cancelarButton.addActionListener(this::cancelarButtonActionPerformed);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabelaLivros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "Título", "Autor", "Disponível"
+                "Nome", "Autor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCellSelectionEnabled(true);
-        jTable1.setShowGrid(false);
-        jScrollPane1.setViewportView(jTable1);
+        tabelaLivros.setCellSelectionEnabled(true);
+        tabelaLivros.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tabelaLivros.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tabelaLivros.setShowGrid(false);
+        jScrollPane1.setViewportView(tabelaLivros);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -97,8 +122,8 @@ public final class TelaLivros extends javax.swing.JPanel {
                                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(39, 39, 39)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(nomeEmprestimo, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
-                                        .addComponent(nomeEmprestimo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                        .addComponent(campoNome, javax.swing.GroupLayout.DEFAULT_SIZE, 738, Short.MAX_VALUE)
+                                        .addComponent(campoAutor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                         .addGap(30, 30, 30))))
         );
         layout.setVerticalGroup(
@@ -108,14 +133,14 @@ public final class TelaLivros extends javax.swing.JPanel {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(nomeEmprestimo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(campoNome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 4, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(nomeEmprestimo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(campoAutor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(37, 37, 37)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelarButton)
@@ -127,19 +152,69 @@ public final class TelaLivros extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
-       ScreenManager.navegarPara(Tela.INICIAL);
+        ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
+    private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
+        LivroService service = new LivroService();
+        LivroModel lm = service.criarLivro(campoNome.getText(), campoAutor.getText());
+
+        if (lm == null) {
+            JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
+            return;
+        }
+
+        try {
+            Connection conn = ConexaoMySQL.getInstancia().getConexao();
+
+            var ldao = new LivroDAO(conn);
+
+            ldao.inserir(lm);
+
+            JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
+
+            campoNome.setText("");
+            campoAutor.setText("");
+
+            campoNome.requestFocus();
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro: " + e.getMessage());
+            return;
+        }
+
+        atualizarTabela();
+    }//GEN-LAST:event_cadastroButtonActionPerformed
+
+    public void atualizarTabela() {
+        try {
+            Connection conn = ConexaoMySQL.getInstancia().getConexao();
+            var ldao = new LivroDAO(conn);
+
+            lista = ldao.selecionarTodos();
+
+            String[] colunas = {"Nome", "Autor"};
+            var model = new DefaultTableModel(colunas, 0);
+
+            for (LivroModel lm : lista) {
+                Object[] linha = {lm.getNome(), lm.getAutor()};
+                model.addRow(linha);
+            }
+
+            tabelaLivros.setModel(model);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;
+    private java.awt.TextField campoAutor;
+    private java.awt.TextField campoNome;
     private javax.swing.JButton cancelarButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private java.awt.TextField nomeEmprestimo;
-    private java.awt.TextField nomeEmprestimo1;
+    private javax.swing.JTable tabelaLivros;
     // End of variables declaration//GEN-END:variables
 }

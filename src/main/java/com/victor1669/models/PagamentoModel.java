@@ -4,19 +4,19 @@ package com.victor1669.models;
  *
  * @author Victor1669
  */
-public class Pagamento {
+public class PagamentoModel {
 
     private int id;
     private int id_funcionario;
     private int valorTotal;
 
-    public Pagamento(int id, int id_funcionario, int valorTotal) {
+    public PagamentoModel(int id, int id_funcionario, int valorTotal) {
         this.id = id;
         this.id_funcionario = id_funcionario;
         this.valorTotal = valorTotal;
     }
 
-    public Pagamento() {
+    public PagamentoModel() {
     }
 
     // ==================== GETTERS E SETTERS ====================

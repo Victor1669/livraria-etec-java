@@ -2,7 +2,7 @@ package com.victor1669.services;
 
 import com.victor1669.classes.Bibliotecario;
 import com.victor1669.classes.Gerente;
-import com.victor1669.models.Funcionario;
+import com.victor1669.models.FuncionarioModel;
 
 /**
  *
@@ -10,7 +10,7 @@ import com.victor1669.models.Funcionario;
  */
 public class FuncionarioService {
 
-    public Funcionario criarFuncionario(String nome, String salarioStr, String tipo) {
+    public FuncionarioModel criarFuncionario(String nome, String salarioStr, String tipo) {
         if (nome == null || nome.isBlank() || salarioStr == null || tipo.isBlank()) {
             return null;
         }
