@@ -1,7 +1,5 @@
 package com.victor1669.telas;
 
-import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.LivroDAO;
 import com.victor1669.models.LivroModel;
 import com.victor1669.services.LivroService;
 import com.victor1669.ui.ScreenManager;
@@ -14,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 
 import java.util.List;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -22,8 +19,6 @@ import java.sql.SQLException;
  * @author Victor1669
  */
 public final class TelaLivros extends javax.swing.JPanel {
-
-    List<LivroModel> lista;
 
     public TelaLivros() {
         initComponents();
@@ -157,40 +152,36 @@ public final class TelaLivros extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         LivroService service = new LivroService();
-        LivroModel lm = service.criarLivro(campoNome.getText(), campoAutor.getText());
 
-        if (lm == null) {
+        service.onInvalid = () -> {
             JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
-            return;
-        }
+        };
 
-        try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-
-            var ldao = new LivroDAO(conn);
-
-            ldao.inserir(lm);
-
+        service.onSuccess = () -> {
             JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
 
             campoNome.setText("");
             campoAutor.setText("");
 
             campoNome.requestFocus();
+        };
+
+        try {
+            LivroModel lm = new LivroModel(campoNome.getText(), campoAutor.getText());
+
+            service.criar(lm);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro: " + e.getMessage());
-            return;
         }
 
         atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
     public void atualizarTabela() {
-        try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-            var ldao = new LivroDAO(conn);
+        LivroService service = new LivroService();
 
-            lista = ldao.selecionarTodos();
+        try {
+            List<LivroModel> lista = service.getItems();
 
             String[] colunas = {"Nome", "Autor"};
             var model = new DefaultTableModel(colunas, 0);
@@ -203,7 +194,9 @@ public final class TelaLivros extends javax.swing.JPanel {
             tabelaLivros.setModel(model);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+
         }
+
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

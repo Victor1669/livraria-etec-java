@@ -15,7 +15,7 @@ public class Gerente extends FuncionarioModel {
 
     @Override
     public double processarPagamento() {
-        bonus = calcularBonus();
+        double bonus = salario * 0.3;
 
         System.out.println(getNome() + ", voce recebeu um bonus de: " + bonus);
 

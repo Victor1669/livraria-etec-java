@@ -16,15 +16,14 @@ public class FuncionarioDAO extends AbstractGenericDAO<FuncionarioModel, Integer
 
     @Override
     protected String gerarStringDeInsert() {
-        return "INSERT INTO funcionarios (nome, salario, bonus, tipoFuncionario) VALUES (?, ?, ?, ?)";
+        return "INSERT INTO funcionarios (nome, salario, tipoFuncionario) VALUES (?, ?, ?)";
     }
 
     @Override
     protected void configurarParametrosDeInsert(PreparedStatement ps, FuncionarioModel funcionario) throws SQLException {
         ps.setString(1, funcionario.getNome());
         ps.setDouble(2, funcionario.getSalario());
-        ps.setDouble(3, funcionario.getBonus());
-        ps.setString(4, funcionario.getTipoFuncionario());
+        ps.setString(3, funcionario.getTipoFuncionario());
     }
 
     @Override

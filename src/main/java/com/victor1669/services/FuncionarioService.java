@@ -1,29 +1,42 @@
 package com.victor1669.services;
 
-import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Gerente;
+import com.victor1669.conexoes.ConexaoMySQL;
+import com.victor1669.daos.FuncionarioDAO;
 import com.victor1669.models.FuncionarioModel;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
  * @author Victor1669
  */
-public class FuncionarioService {
+public class FuncionarioService extends GenericService<FuncionarioModel> {
 
-    public FuncionarioModel criarFuncionario(String nome, String salarioStr, String tipo) {
-        if (nome == null || nome.isBlank() || salarioStr == null || tipo.isBlank()) {
-            return null;
+    @Override
+    public void criar(FuncionarioModel fm) throws SQLException {
+        String nome = fm.getNome();
+        double salario = fm.getSalario();
+        String tipo = fm.getTipoFuncionario();
+
+        if (nome == null || nome.isBlank() || salario == 0 || tipo.isBlank()) {
+            onInvalid.run();
         }
 
-        try {
-            double salario = Double.parseDouble(salarioStr);
-            String tipoLimpo = tipo.toLowerCase();
+        Connection conn = ConexaoMySQL.getInstancia().getConexao();
 
-            return tipoLimpo.equals("gerente")
-                    ? new Gerente(nome, salario)
-                    : new Bibliotecario(nome, salario);
-        } catch (NumberFormatException e) {
-            return null;
-        }
+        FuncionarioDAO fdao = new FuncionarioDAO(conn);
+
+        fdao.inserir(fm);
+
+        onSuccess.run();
+    }
+
+    @Override
+    public List<FuncionarioModel> getItems() throws SQLException {
+        Connection conn = ConexaoMySQL.getInstancia().getConexao();
+        FuncionarioDAO fdao = new FuncionarioDAO(conn);
+
+        return fdao.selecionarTodos();
     }
 }

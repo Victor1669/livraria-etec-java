@@ -1,11 +1,11 @@
 package com.victor1669.telas;
 
+import com.victor1669.classes.Bibliotecario;
+import com.victor1669.classes.Gerente;
 import com.victor1669.models.FuncionarioModel;
-import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.FuncionarioDAO;
-import com.victor1669.daos.PagamentoDAO;
+import com.victor1669.models.PagamentoModel;
 import com.victor1669.services.FuncionarioService;
-import java.sql.Connection;
+import com.victor1669.services.PagamentoService;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -177,24 +177,12 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         FuncionarioService service = new FuncionarioService();
-        FuncionarioModel f = service.criarFuncionario(
-                campoNome.getText(),
-                campoSalario.getText(),
-                selectTipoFuncionario.getSelectedItem().toString()
-        );
 
-        if (f == null) {
+        service.onInvalid = () -> {
             JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
-            return;
-        }
+        };
 
-        try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-
-            var fdao = new FuncionarioDAO(conn);
-
-            fdao.inserir(f);
-
+        service.onSuccess = () -> {
             JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
 
             campoNome.setText("");
@@ -202,7 +190,19 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
             selectTipoFuncionario.setSelectedIndex(0);
 
             campoNome.requestFocus();
-        } catch (SQLException e) {
+        };
+
+        try {
+            String nome = campoNome.getText();
+            double salario = Double.parseDouble(campoSalario.getText());
+            String tipo = selectTipoFuncionario.getSelectedItem().toString();
+
+            FuncionarioModel fm = tipo.toLowerCase().equals("gerente")
+                    ? new Gerente(nome, salario)
+                    : new Bibliotecario(nome, salario);
+
+            service.criar(fm);
+        } catch (SQLException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
             return;
         }
@@ -211,11 +211,10 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
     public void atualizarTabela() {
-        try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-            FuncionarioDAO fdao = new FuncionarioDAO(conn);
+        FuncionarioService service = new FuncionarioService();
 
-            lista = fdao.selecionarTodos();
+        try {
+            lista = service.getItems();
 
             String[] colunas = {"Nome", "Cargo"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
@@ -228,24 +227,30 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
             tabelaFuncionarios.setModel(model);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
+
         }
+
     }
 
     private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
         int linhaSelecionada = tabelaFuncionarios.getSelectedRow();
 
-        FuncionarioModel f = lista.get(linhaSelecionada);
+        FuncionarioModel fm = lista.get(linhaSelecionada);
+
+        PagamentoService service = new PagamentoService();
+
+        double totalPago = fm.processarPagamento();
+
+        PagamentoModel pm = new PagamentoModel();
+        pm.setId_funcionario(fm.getId());
+        pm.setValorTotal((int) totalPago);
 
         try {
-            Connection conn = ConexaoMySQL.getInstancia().getConexao();
-
-            PagamentoDAO pdao = new PagamentoDAO(conn);
-
-            pdao.pagar(f);
+            service.criar(pm);
 
             JOptionPane.showMessageDialog(null, "Pagamento realizado com sucesso!");
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao pagar funcionário " + f.getNome() + ": " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao pagar funcionário " + fm.getNome() + ": " + e.getMessage());
         }
     }//GEN-LAST:event_pagamentoButtonActionPerformed
 

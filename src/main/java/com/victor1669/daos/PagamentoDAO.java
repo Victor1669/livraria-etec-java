@@ -1,6 +1,5 @@
 package com.victor1669.daos;
 
-import com.victor1669.models.FuncionarioModel;
 import com.victor1669.models.PagamentoModel;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,17 +12,8 @@ public class PagamentoDAO extends AbstractGenericDAO<PagamentoModel, Integer> {
         super(conn, "pagamentos");
     }
 
-    public void pagar(FuncionarioModel f) throws SQLException {
-
-        f.setFATOR_BONUS(f.getTipoFuncionario().equals("gerente") ? 0.1 : 0.2);
-        f.calcularBonus();
-        double totalPago = f.processarPagamento();
-
-        PagamentoModel pagamento = new PagamentoModel();
-        pagamento.setId_funcionario(f.getId());
-        pagamento.setValorTotal((int) totalPago);
-
-        inserir(pagamento);
+    public void pagar(PagamentoModel pm) throws SQLException {
+        inserir(pm);
     }
 
     @Override

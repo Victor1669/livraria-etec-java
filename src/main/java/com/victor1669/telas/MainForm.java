@@ -21,6 +21,7 @@ public class MainForm extends javax.swing.JFrame {
     final void mountComponents() {
         setLocationRelativeTo(null);
         cardLayout = new CardLayout();
+        
         container = new JPanel(cardLayout);
         container.add(new TelaInicial(), Tela.INICIAL.getNome());
         container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
@@ -28,8 +29,11 @@ public class MainForm extends javax.swing.JFrame {
         container.add(new TelaLivros(), Tela.LIVROS.getNome());
         container.add(new TelaEmprestimos(), Tela.EMPRESTIMO.getNome());
         container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
+        container.add(new TelaEntrarSistema(), Tela.ENTRAR_SISTEMA.getNome());
+        
         getContentPane().setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
+        
         ScreenManager.inicializar(this, container, cardLayout);
         ScreenManager.navegarPara(Tela.INICIAL);
     }

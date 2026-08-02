@@ -10,7 +10,8 @@ public enum Tela {
     FUNCIONARIO("FUNCIONARIO"),
     LIVROS("LIVROS"),
     PAGAMENTO("PAGAMENTO"),
-    CONSULTA("CONSULTA");
+    CONSULTA("CONSULTA"),
+    ENTRAR_SISTEMA("ENTRAR_SISTEMA");
     
     private final String nome;
 

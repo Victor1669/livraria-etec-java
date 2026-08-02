@@ -1,9 +1,9 @@
-package com.victor1669.classes;
+package com.victor1669.models;
 
-public class Usuario {
-
-    private String nome;
-    private int idade;
+public class UsuarioModel {
+    protected int id;
+    protected String nome;
+    protected int idade;
 
     public String getNome() {
         return nome;

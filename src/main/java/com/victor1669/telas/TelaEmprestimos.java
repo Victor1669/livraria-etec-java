@@ -52,14 +52,14 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Nome");
+        jLabel6.setText("Seu nome");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Livro");
 
         cancelarButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cancelarButton2.setText("Devolver");
+        cancelarButton2.setText("Devolver livro");
 
         javax.swing.GroupLayout devolucaoLayout = new javax.swing.GroupLayout(devolucao);
         devolucao.setLayout(devolucaoLayout);
@@ -100,7 +100,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(125, 125, 125)
                 .addComponent(cancelarButton2)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         devolucao1.setBackground(new java.awt.Color(153, 153, 153));
@@ -111,14 +111,14 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel2.setText("Nome");
+        jLabel2.setText("Seu nome");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Livro");
 
         cancelarButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cancelarButton1.setText("Emprestar");
+        cancelarButton1.setText("Realizar empréstimo");
 
         javax.swing.GroupLayout devolucao1Layout = new javax.swing.GroupLayout(devolucao1);
         devolucao1.setLayout(devolucao1Layout);
