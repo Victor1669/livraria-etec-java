@@ -18,7 +18,7 @@ public class PagamentoDAO extends AbstractGenericDAO<PagamentoModel, Integer> {
 
     @Override
     protected String gerarStringDeInsert() {
-        return "INSERT INTO pagamentos (id_funcionario, totalPago) VALUES (?, ?)";
+        return "INSERT INTO " + tableName + " (id_funcionario, totalPago) VALUES (?, ?)";
     }
 
     @Override

@@ -12,10 +12,6 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Victor1669
- */
 public final class TelaPagamento extends javax.swing.JPanel {
 
     public TelaPagamento() {

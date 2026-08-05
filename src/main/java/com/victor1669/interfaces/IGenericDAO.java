@@ -8,4 +8,6 @@ public interface IGenericDAO<T, ID> {
     void inserir(T entity) throws SQLException;
 
     List<T> selecionarTodos() throws SQLException;
+    
+    T selecionarIndividual(String WHERE) throws SQLException;
 }

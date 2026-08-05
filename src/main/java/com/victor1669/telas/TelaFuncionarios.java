@@ -16,10 +16,6 @@ import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Victor1669
- */
 public final class TelaFuncionarios extends javax.swing.JPanel {
 
     List<FuncionarioModel> lista;

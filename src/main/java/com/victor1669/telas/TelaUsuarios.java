@@ -4,10 +4,6 @@ import com.victor1669.ui.ScreenManager;
 import com.victor1669.ui.Tela;
 import javax.swing.JTable;
 
-/**
- *
- * @author Victor1669
- */
 public class TelaUsuarios extends javax.swing.JPanel {
 
     public TelaUsuarios() {

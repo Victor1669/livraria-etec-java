@@ -6,10 +6,6 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-/**
- *
- * @author Victor1669
- */
 public class ScreenManager {
 
     private static JFrame instancia;

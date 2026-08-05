@@ -6,7 +6,8 @@ public class LivroModel {
     protected String nome;
     protected String autor;
 
-    public LivroModel(String titulo, String author) {
+    public LivroModel(int id, String titulo, String author) {
+        this.id = id;
         this.nome = titulo;
         this.autor = author;
     }

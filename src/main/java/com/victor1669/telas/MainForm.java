@@ -35,7 +35,7 @@ public class MainForm extends javax.swing.JFrame {
         add(container, BorderLayout.CENTER);
         
         ScreenManager.inicializar(this, container, cardLayout);
-        ScreenManager.navegarPara(Tela.INICIAL);
+        ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
     }
 
     static final void connectMySQL() {

@@ -16,7 +16,6 @@ public abstract class AbstractGenericDAO<T, ID> implements IGenericDAO<T, ID> {
     }
 
     // ===================== TEMPLATE METHODS =====================
-
     @Override
     public void inserir(T entity) throws SQLException {
         String sql = gerarStringDeInsert();
@@ -31,8 +30,7 @@ public abstract class AbstractGenericDAO<T, ID> implements IGenericDAO<T, ID> {
         String sql = "SELECT * FROM " + tableName;
         List<T> lista = new ArrayList<>();
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 T entity = transformarLinhaSQLEmObjeto(rs);
@@ -42,8 +40,19 @@ public abstract class AbstractGenericDAO<T, ID> implements IGenericDAO<T, ID> {
         return lista;
     }
 
-    // ===================== MÉTODOS ABSTRATOS =====================
+    @Override
+    public T selecionarIndividual(String WHERE) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " " + WHERE;
 
+        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+
+            T entity = transformarLinhaSQLEmObjeto(rs);
+
+            return entity;
+        }
+    }
+
+    // ===================== MÉTODOS ABSTRATOS =====================
     protected abstract String gerarStringDeInsert();
 
     protected abstract void configurarParametrosDeInsert(PreparedStatement ps, T entity) throws SQLException;

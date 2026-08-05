@@ -1,9 +1,19 @@
 package com.victor1669.models;
 
 public class UsuarioModel {
+
     protected int id;
     protected String nome;
-    protected int idade;
+    private String senha;
+
+    public UsuarioModel(int id, String nome, String senha) {
+        this.id = id;
+        this.nome = nome;
+        this.senha = senha;
+    }
+
+    public UsuarioModel() {
+    }
 
     public String getNome() {
         return nome;
@@ -13,12 +23,12 @@ public class UsuarioModel {
         this.nome = nome;
     }
 
-    public int getIdade() {
-        return idade;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setIdade(int idade) {
-        this.idade = idade;
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
 }

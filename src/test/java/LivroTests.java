@@ -10,7 +10,7 @@ public class LivroTests {
 
     @BeforeEach
     public void setUpClass() {
-        lm = new LivroModel("1984", "George Orwell");
+        lm = new LivroModel(1, "1984", "George Orwell");
     }
 
     @Test

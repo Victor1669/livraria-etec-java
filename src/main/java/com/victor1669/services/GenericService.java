@@ -11,4 +11,5 @@ public abstract class GenericService<T> {
     public abstract void criar(T model) throws SQLException;
 
     public abstract List<T> getItems() throws SQLException;
+
 }

@@ -7,10 +7,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- *
- * @author Victor1669
- */
 public class LivroService extends GenericService<LivroModel> {
 
     @Override

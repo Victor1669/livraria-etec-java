@@ -1,9 +1,5 @@
 package com.victor1669.models;
 
-/**
- *
- * @author Victor1669
- */
 public class PagamentoModel {
 
     private int id;

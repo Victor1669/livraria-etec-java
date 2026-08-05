@@ -14,10 +14,6 @@ import java.util.List;
 
 import java.sql.SQLException;
 
-/**
- *
- * @author Victor1669
- */
 public final class TelaLivros extends javax.swing.JPanel {
 
     public TelaLivros() {
@@ -167,7 +163,9 @@ public final class TelaLivros extends javax.swing.JPanel {
         };
 
         try {
-            LivroModel lm = new LivroModel(campoNome.getText(), campoAutor.getText());
+            LivroModel lm = new LivroModel();
+            lm.setNome(campoNome.getText());
+            lm.setAutor(campoAutor.getText());
 
             service.criar(lm);
         } catch (SQLException e) {

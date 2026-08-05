@@ -7,10 +7,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- *
- * @author Victor1669
- */
 public class FuncionarioTests {
 
     static FuncionarioModel bibliotecario;

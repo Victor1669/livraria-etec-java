@@ -7,19 +7,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- *
- * @author Victor1669
- */
 public class PagamentoService extends GenericService<PagamentoModel> {
 
     @Override
     public void criar(PagamentoModel pm) throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
 
-            PagamentoDAO pdao = new PagamentoDAO(conn);
+        PagamentoDAO pdao = new PagamentoDAO(conn);
 
-            pdao.pagar(pm);
+        pdao.pagar(pm);
     }
 
     @Override

@@ -5,10 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- *
- * @author Victor1669
- */
 public class ConexaoMySQL {
 
     private static ConexaoMySQL instancia;

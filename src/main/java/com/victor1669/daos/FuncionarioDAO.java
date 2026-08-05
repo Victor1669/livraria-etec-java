@@ -16,7 +16,7 @@ public class FuncionarioDAO extends AbstractGenericDAO<FuncionarioModel, Integer
 
     @Override
     protected String gerarStringDeInsert() {
-        return "INSERT INTO funcionarios (nome, salario, tipoFuncionario) VALUES (?, ?, ?)";
+        return "INSERT INTO " + tableName + " (nome, salario, tipoFuncionario) VALUES (?, ?, ?)";
     }
 
     @Override

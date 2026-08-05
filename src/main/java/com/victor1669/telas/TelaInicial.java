@@ -7,10 +7,6 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Victor1669
- */
 public final class TelaInicial extends javax.swing.JPanel {
 
     public TelaInicial() {

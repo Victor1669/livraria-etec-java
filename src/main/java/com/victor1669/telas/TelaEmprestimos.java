@@ -3,10 +3,6 @@ package com.victor1669.telas;
 import com.victor1669.ui.ScreenManager;
 import com.victor1669.ui.Tela;
 
-/**
- *
- * @author Victor1669
- */
 public final class TelaEmprestimos extends javax.swing.JPanel {
 
     public TelaEmprestimos() {

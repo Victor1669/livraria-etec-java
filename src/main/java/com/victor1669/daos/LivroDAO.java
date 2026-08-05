@@ -6,10 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- *
- * @author Victor1669
- */
 public class LivroDAO extends AbstractGenericDAO<LivroModel, Integer> {
 
     public LivroDAO(Connection conn) {
@@ -18,7 +14,7 @@ public class LivroDAO extends AbstractGenericDAO<LivroModel, Integer> {
 
     @Override
     protected String gerarStringDeInsert() {
-        return "INSERT INTO livros (nome, autor) VALUES (?, ?)";
+        return "INSERT INTO " + tableName + " (nome, autor) VALUES (?, ?)";
     }
 
     @Override
@@ -32,9 +28,8 @@ public class LivroDAO extends AbstractGenericDAO<LivroModel, Integer> {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String autor = rs.getString("autor");
-        
-        LivroModel livro = new LivroModel(nome, autor);
-        livro.setId(id);
+
+        LivroModel livro = new LivroModel(id, nome, autor);
 
         return livro;
 
