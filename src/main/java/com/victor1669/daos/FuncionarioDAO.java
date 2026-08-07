@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class FuncionarioDAO extends AbstractGenericDAO<FuncionarioModel, Integer> {
+public class FuncionarioDAO extends GenericDAO<FuncionarioModel, Integer> {
 
     public FuncionarioDAO(Connection conn) {
         super(conn, "funcionarios");

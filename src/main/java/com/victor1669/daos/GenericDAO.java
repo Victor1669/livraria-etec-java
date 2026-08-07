@@ -5,17 +5,16 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGenericDAO<T, ID> implements IGenericDAO<T, ID> {
+public abstract class GenericDAO<T, ID> implements IGenericDAO<T, ID> {
 
     protected final Connection conn;
     protected final String tableName;
 
-    public AbstractGenericDAO(Connection conn, String tableName) {
+    public GenericDAO(Connection conn, String tableName) {
         this.conn = conn;
         this.tableName = tableName;
     }
 
-    // ===================== TEMPLATE METHODS =====================
     @Override
     public void inserir(T entity) throws SQLException {
         String sql = gerarStringDeInsert();
@@ -29,30 +28,27 @@ public abstract class AbstractGenericDAO<T, ID> implements IGenericDAO<T, ID> {
     public List<T> selecionarTodos() throws SQLException {
         String sql = "SELECT * FROM " + tableName;
         List<T> lista = new ArrayList<>();
-
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
             while (rs.next()) {
-                T entity = transformarLinhaSQLEmObjeto(rs);
-                lista.add(entity);
+                lista.add(transformarLinhaSQLEmObjeto(rs));
             }
         }
         return lista;
     }
-
-    @Override
-    public T selecionarIndividual(String WHERE) throws SQLException {
-        String sql = "SELECT * FROM " + tableName + " " + WHERE;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-
-            T entity = transformarLinhaSQLEmObjeto(rs);
-
-            return entity;
+    
+    public T selecionarPorCampo(String coluna, String valor) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " WHERE " + coluna + " = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, valor);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return transformarLinhaSQLEmObjeto(rs);
+                }
+                return null;
+            }
         }
     }
 
-    // ===================== MÉTODOS ABSTRATOS =====================
     protected abstract String gerarStringDeInsert();
 
     protected abstract void configurarParametrosDeInsert(PreparedStatement ps, T entity) throws SQLException;

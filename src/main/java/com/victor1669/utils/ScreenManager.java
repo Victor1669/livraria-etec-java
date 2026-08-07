@@ -1,4 +1,4 @@
-package com.victor1669.ui;
+package com.victor1669.utils;
 
 import java.awt.CardLayout;
 import java.awt.Container;
@@ -11,6 +11,7 @@ public class ScreenManager {
     private static JFrame instancia;
     private static Container container;
     private static CardLayout cardLayout;
+    public static Tela telaAtual;
 
     public static void inicializar(JFrame frame, Container cont, CardLayout layout) {
         instancia = frame;
@@ -21,7 +22,9 @@ public class ScreenManager {
     public static void navegarPara(Tela tela) {
         instancia.setTitle(tela.getNome().equals("TELA_INICIAL") ? "Livraria ETEC" : tela.getNome());
         cardLayout.show(container, tela.getNome());
-        
+
+        telaAtual = tela;
+
         instancia.setLocationRelativeTo(null);
         instancia.revalidate();
         instancia.repaint();

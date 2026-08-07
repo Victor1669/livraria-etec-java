@@ -35,11 +35,18 @@ public class UsuarioService extends GenericService<UsuarioModel> {
         return udao.selecionarTodos();
     }
 
-    public UsuarioModel getUser(int id) throws SQLException {
+    public UsuarioModel getUserById(int id) throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
         UsuarioDAO udao = new UsuarioDAO(conn);
 
-        return udao.selecionarIndividual("id = " + id);
+        return udao.selecionarPorCampo("id", Integer.toString(id));
+    }
+
+    public UsuarioModel getUserByName(String name) throws SQLException {
+        Connection conn = ConexaoMySQL.getInstancia().getConexao();
+        UsuarioDAO udao = new UsuarioDAO(conn);
+
+        return udao.selecionarPorCampo("nome", name);
     }
 
     public void login(String nome, String senha) throws SQLException {
@@ -48,10 +55,7 @@ public class UsuarioService extends GenericService<UsuarioModel> {
             return;
         }
 
-        UsuarioModel user = getItems().stream()
-                .filter(u -> u.getNome().equals(nome))
-                .findFirst()
-                .orElse(null);
+        UsuarioModel user = getUserByName(nome);
 
         if (user != null) {
             if (user.getSenha().equals(senha)) {

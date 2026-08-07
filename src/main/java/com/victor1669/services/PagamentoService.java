@@ -15,7 +15,7 @@ public class PagamentoService extends GenericService<PagamentoModel> {
 
         PagamentoDAO pdao = new PagamentoDAO(conn);
 
-        pdao.pagar(pm);
+        pdao.inserir(pm);
     }
 
     @Override

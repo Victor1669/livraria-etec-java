@@ -6,14 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PagamentoDAO extends AbstractGenericDAO<PagamentoModel, Integer> {
+public class PagamentoDAO extends GenericDAO<PagamentoModel, Integer> {
 
     public PagamentoDAO(Connection conn) {
         super(conn, "pagamentos");
-    }
-
-    public void pagar(PagamentoModel pm) throws SQLException {
-        inserir(pm);
     }
 
     @Override

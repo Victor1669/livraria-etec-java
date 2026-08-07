@@ -1,4 +1,4 @@
-package com.victor1669.ui;
+package com.victor1669.utils;
 
 public enum Tela {
     INICIAL("TELA_INICIAL"),

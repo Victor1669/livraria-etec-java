@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class LivroDAO extends AbstractGenericDAO<LivroModel, Integer> {
+public class LivroDAO extends GenericDAO<LivroModel, Integer> {
 
     public LivroDAO(Connection conn) {
         super(conn, "livros");

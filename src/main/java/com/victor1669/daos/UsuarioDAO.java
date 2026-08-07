@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UsuarioDAO extends AbstractGenericDAO<UsuarioModel, Integer> {
+public class UsuarioDAO extends GenericDAO<UsuarioModel, Integer> {
 
     public UsuarioDAO(Connection conn) {
         super(conn, "usuarios");

@@ -1,9 +1,11 @@
 package com.victor1669.conexoes;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.flywaydb.core.Flyway;
 
 public class ConexaoMySQL {
 
@@ -14,11 +16,27 @@ public class ConexaoMySQL {
     private final String SENHA;
     private final String BANCO;
 
-    public ConexaoMySQL(String host, String banco, String usuario, String senha) {
+    public ConexaoMySQL() {
+        Dotenv dotenv = Dotenv.load();
+
+        String url = dotenv.get("DB_URL");
+        String usuario = dotenv.get("DB_USER");
+        String senha = dotenv.get("DB_PASSWORD");
+        String banco = dotenv.get("DB_NAME");
+
+        Flyway flyway = Flyway.configure()
+                .dataSource(url, usuario, senha)
+                .locations("classpath:db/migration")
+                .baselineOnMigrate(true)
+                .load();
+
+        flyway.repair();
+        flyway.migrate();
+        
         if (instancia != null) {
             throw new IllegalStateException("Já existe uma instância de ConexaoMySQL!");
         }
-        this.URL = "jdbc:mysql://" + host;
+        this.URL = url;
         this.BANCO = banco;
         this.USUARIO = usuario;
         this.SENHA = senha;

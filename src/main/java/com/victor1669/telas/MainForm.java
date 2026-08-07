@@ -1,15 +1,15 @@
 package com.victor1669.telas;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
-import org.flywaydb.core.Flyway;
 import java.sql.SQLException;
 import com.victor1669.conexoes.*;
-import com.victor1669.ui.ScreenManager;
-import com.victor1669.ui.Tela;
+import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.Tela;
 
 public class MainForm extends javax.swing.JFrame {
+
     private static CardLayout cardLayout;
     private static JPanel container;
 
@@ -21,7 +21,7 @@ public class MainForm extends javax.swing.JFrame {
     final void mountComponents() {
         setLocationRelativeTo(null);
         cardLayout = new CardLayout();
-        
+
         container = new JPanel(cardLayout);
         container.add(new TelaInicial(), Tela.INICIAL.getNome());
         container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
@@ -30,26 +30,18 @@ public class MainForm extends javax.swing.JFrame {
         container.add(new TelaEmprestimos(), Tela.EMPRESTIMO.getNome());
         container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
         container.add(new TelaEntrarSistema(), Tela.ENTRAR_SISTEMA.getNome());
-        
+
         getContentPane().setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
-        
+
         ScreenManager.inicializar(this, container, cardLayout);
         ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
     }
 
     static final void connectMySQL() {
-        Dotenv dotenv = Dotenv.load();
-        String url = dotenv.get("DB_URL");
-        String usuario = dotenv.get("DB_USER");
-        String senha = dotenv.get("DB_PASSWORD");
-        Flyway flyway = Flyway.configure()
-                .dataSource(url, usuario, senha)
-                .locations("classpath:db/migration")
-                .baselineOnMigrate(true)
-                .load();
-        flyway.migrate();
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL("localhost:3306", "livrariaJava", usuario, senha);
+
+        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
+
         try {
             conexaoMySQL.conectar();
             conexaoMySQL.usarBanco();
@@ -86,11 +78,11 @@ public class MainForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
+            .addGap(0, 954, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 580, Short.MAX_VALUE)
+            .addGap(0, 526, Short.MAX_VALUE)
         );
 
         pack();

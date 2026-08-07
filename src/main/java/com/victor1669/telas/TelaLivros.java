@@ -2,8 +2,8 @@ package com.victor1669.telas;
 
 import com.victor1669.models.LivroModel;
 import com.victor1669.services.LivroService;
-import com.victor1669.ui.ScreenManager;
-import com.victor1669.ui.Tela;
+import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.Tela;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;

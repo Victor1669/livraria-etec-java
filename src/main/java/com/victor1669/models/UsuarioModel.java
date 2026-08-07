@@ -12,6 +12,14 @@ public class UsuarioModel {
         this.senha = senha;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public UsuarioModel() {
     }
 

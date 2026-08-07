@@ -1,8 +1,8 @@
 package com.victor1669.telas;
 
 import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.ui.ScreenManager;
-import com.victor1669.ui.Tela;
+import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.Tela;
 import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -12,6 +12,8 @@ public final class TelaInicial extends javax.swing.JPanel {
     public TelaInicial() {
         initComponents();
         configureLinks();
+
+
     }
 
     void configureLinks() {
@@ -57,7 +59,7 @@ public final class TelaInicial extends javax.swing.JPanel {
         livroLink.setText("Livro");
 
         emprestimoLink.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        emprestimoLink.setText("Empréstimo");
+        emprestimoLink.setText("Empréstimo de livros");
 
         resetDatabase.setBackground(new java.awt.Color(255, 102, 102));
         resetDatabase.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -74,7 +76,6 @@ public final class TelaInicial extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(312, 312, 312)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(emprestimoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(livroLink, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -84,7 +85,8 @@ public final class TelaInicial extends javax.swing.JPanel {
                                     .addComponent(funcionarioLink, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(pagamentoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(resetDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(resetDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(emprestimoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(392, 392, 392)
                         .addComponent(jLabel1)))
@@ -95,7 +97,9 @@ public final class TelaInicial extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(emprestimoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pagamentoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(funcionarioLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -104,8 +108,6 @@ public final class TelaInicial extends javax.swing.JPanel {
                     .addComponent(livroLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(usuariosLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(emprestimoLink, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                 .addComponent(resetDatabase, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35))
         );

@@ -32,18 +32,21 @@ cd livraria-etec
 
 Antes de rodar a aplicação, você precisa configurar as seguintes variáveis de ambiente no seu sistema para permitir a conexão com o banco de dados:
 
-DB_URL=jdbc:mysql://localhost:3306/`<NOME_BANCO>`
+DB_URL=`jdbc:mysql://localhost:3306/`
 
 DB_USER=`<NOME_USUARIO>`
 
 DB_PASSWORD=`<SENHA_BANCO>`
 
+DB_PASSWORD=`<NOME_BANCO>`
+
 ### 3. Migrations
 
 Depois de configurar as variáveis de ambiente, é importante criar o banco na sua máquina.
 
-Para executar as migrations, rode em seu terminal (com o maven instalado):
+Para executar as migrations, rode em seu terminal (com o maven instalado) um dos scripts:
 
-`migrate.bat`
+`migrate_linux.sh`
+`migrate_windows.bat`
 
 Isso irá executar as migrations do FlyWay

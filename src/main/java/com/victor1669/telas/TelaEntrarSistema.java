@@ -2,10 +2,14 @@ package com.victor1669.telas;
 
 import com.victor1669.models.UsuarioModel;
 import com.victor1669.services.UsuarioService;
-import com.victor1669.ui.ScreenManager;
-import com.victor1669.ui.Tela;
+
+import com.victor1669.utils.LocalStorage;
+import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.Tela;
+
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+
 
 public class TelaEntrarSistema extends javax.swing.JPanel {
 
@@ -96,6 +100,9 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
         UsuarioService service = new UsuarioService();
 
         service.onSuccess = () -> {
+            LocalStorage.save("userName", campoNome.getText());
+            LocalStorage.save("userPassword", campoSenha.getText());
+            
             ScreenManager.navegarPara(Tela.INICIAL);
         };
 

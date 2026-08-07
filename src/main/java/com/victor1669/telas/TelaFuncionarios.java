@@ -9,8 +9,8 @@ import com.victor1669.services.PagamentoService;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.victor1669.ui.ScreenManager;
-import com.victor1669.ui.Tela;
+import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.Tela;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
@@ -29,7 +29,6 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
                 super.componentShown(e);
                 atualizarTabela();
             }
-
         });
 
     }
