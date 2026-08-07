@@ -3,6 +3,7 @@ package com.victor1669.utils;
 public enum Tela {
     INICIAL("TELA_INICIAL"),
     EMPRESTIMO("EMPRESTIMO"),
+    DEVOLUCAO("DEVOLUCAO"),
     FUNCIONARIO("FUNCIONARIO"),
     LIVROS("LIVROS"),
     PAGAMENTO("PAGAMENTO"),

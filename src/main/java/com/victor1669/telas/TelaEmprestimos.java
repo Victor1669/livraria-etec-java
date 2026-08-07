@@ -2,11 +2,9 @@ package com.victor1669.telas;
 
 import com.victor1669.models.EmprestimoModel;
 import com.victor1669.models.LivroModel;
-import com.victor1669.models.UsuarioModel;
 
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.LivroService;
-import com.victor1669.services.UsuarioService;
 
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
@@ -43,7 +41,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         try {
             lista = service.getItems();
 
-            String[] colunas = {"Nome", "Cargo"};
+            String[] colunas = {"Livro", "Autor"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
             for (LivroModel lm : lista) {
@@ -88,7 +86,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Nome", "Autor"
+                "Livro", "Autor"
             }
         ) {
             Class[] types = new Class [] {
@@ -128,15 +126,15 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(42, 42, 42)
+                .addGap(30, 30, 30)
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollTabelaLivros, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(scrollTabelaLivros, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cancelarButton1)
                     .addComponent(cancelarButton))
-                .addContainerGap())
+                .addGap(26, 26, 26))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -146,11 +144,10 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
     private void cancelarButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButton1ActionPerformed
         EmprestimoService emprestimoService = new EmprestimoService();
-        UsuarioService usuarioService = new UsuarioService();
+
+        String userName = LocalStorage.get("userName");
 
         try {
-            // USUÁRIO
-            UsuarioModel um = usuarioService.getUserByName(LocalStorage.get("userName"));
 
             // LIVRO SELECIONADO
             int linhaSelecionada = tabelaLivros.getSelectedRow();
@@ -158,12 +155,12 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
             // CRIAÇÃO DO EMPRÉSTIMO
             emprestimoService.onSuccess = () -> {
-                JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + um.getNome() + "!");
+                JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + userName + "!");
             };
 
             EmprestimoModel em = new EmprestimoModel();
             em.setNome_livro(lm.getNome());
-            em.setId_usuario(um.getId());
+            em.setNome_usuario(userName);
 
             emprestimoService.criar(em);
         } catch (SQLException e) {

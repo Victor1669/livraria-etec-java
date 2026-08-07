@@ -35,4 +35,9 @@ public class FuncionarioService extends GenericService<FuncionarioModel> {
 
         return fdao.selecionarTodos();
     }
+
+    @Override
+    public void deleteItem(int itemId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

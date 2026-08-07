@@ -35,7 +35,16 @@ public abstract class GenericDAO<T, ID> implements IGenericDAO<T, ID> {
         }
         return lista;
     }
-    
+
+    @Override
+    public void deletar(ID id) throws SQLException {
+        String sql = "DELETE FROM " + tableName + " WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
     public T selecionarPorCampo(String coluna, String valor) throws SQLException {
         String sql = "SELECT * FROM " + tableName + " WHERE " + coluna + " = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

@@ -34,6 +34,11 @@ public class UsuarioService extends GenericService<UsuarioModel> {
 
         return udao.selecionarTodos();
     }
+    
+    @Override
+    public void deleteItem(int itemId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     public UsuarioModel getUserById(int id) throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();

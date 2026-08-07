@@ -10,7 +10,6 @@ import com.victor1669.utils.Tela;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-
 public class TelaEntrarSistema extends javax.swing.JPanel {
 
     public TelaEntrarSistema() {
@@ -101,8 +100,7 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
 
         service.onSuccess = () -> {
             LocalStorage.save("userName", campoNome.getText());
-            LocalStorage.save("userPassword", campoSenha.getText());
-            
+
             ScreenManager.navegarPara(Tela.INICIAL);
         };
 

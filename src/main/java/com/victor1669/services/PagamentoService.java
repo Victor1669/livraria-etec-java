@@ -26,4 +26,8 @@ public class PagamentoService extends GenericService<PagamentoModel> {
         return pdao.selecionarTodos();
     }
 
+    @Override
+    public void deleteItem(int itemId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

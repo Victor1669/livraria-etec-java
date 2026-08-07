@@ -102,7 +102,6 @@ public class TelaUsuarios extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;
     private java.awt.TextField campoTitulo;
-    private javax.swing.JButton cancelarButton;
     private javax.swing.JButton cancelarButton1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

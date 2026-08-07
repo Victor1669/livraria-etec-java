@@ -9,4 +9,6 @@ public interface IGenericDAO<T, ID> {
 
     List<T> selecionarTodos() throws SQLException;
 
+    void deletar(ID id) throws SQLException;
+
 }

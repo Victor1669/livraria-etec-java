@@ -12,4 +12,5 @@ public abstract class GenericService<T> {
 
     public abstract List<T> getItems() throws SQLException;
 
+    public abstract void deleteItem(int itemId) throws SQLException;
 }

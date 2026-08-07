@@ -41,4 +41,9 @@ public class LivroService extends GenericService<LivroModel> {
             return null;
         }
     }
+    
+    @Override
+    public void deleteItem(int itemId) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

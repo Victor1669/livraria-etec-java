@@ -28,6 +28,7 @@ public class MainForm extends javax.swing.JFrame {
         container.add(new TelaPagamento(), Tela.PAGAMENTO.getNome());
         container.add(new TelaLivros(), Tela.LIVROS.getNome());
         container.add(new TelaEmprestimos(), Tela.EMPRESTIMO.getNome());
+        container.add(new TelaDevolucao(), Tela.DEVOLUCAO.getNome());
         container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
         container.add(new TelaEntrarSistema(), Tela.ENTRAR_SISTEMA.getNome());
 

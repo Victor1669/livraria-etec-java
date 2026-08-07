@@ -29,4 +29,14 @@ public class EmprestimoService extends GenericService<EmprestimoModel> {
         return edao.selecionarTodos();
     }
 
+    @Override
+    public void deleteItem(int itemId) throws SQLException {
+        Connection conn = ConexaoMySQL.getInstancia().getConexao();
+        EmprestimoDAO edao = new EmprestimoDAO(conn);
+
+        edao.deletar(itemId);
+        
+        onSuccess.run();
+    }
+
 }
