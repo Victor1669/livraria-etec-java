@@ -58,6 +58,20 @@ public abstract class GenericDAO<T, ID> implements IGenericDAO<T, ID> {
         }
     }
 
+    public List<T> selectAllByField(String column, String value) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " WHERE " + column + " = ?";
+        List<T> list = new ArrayList<>();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setObject(1, value);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(mapRowToEntity(rs));
+                }
+            }
+        }
+        return list;
+    }
+
     protected abstract String buildInsertQuery();
 
     protected abstract void setInsertParameters(PreparedStatement ps, T entity) throws SQLException;

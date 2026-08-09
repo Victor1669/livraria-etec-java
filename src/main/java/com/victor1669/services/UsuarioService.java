@@ -1,14 +1,17 @@
 package com.victor1669.services;
 
 import com.victor1669.conexoes.ConexaoMySQL;
+import com.victor1669.daos.GenericDAO;
 import com.victor1669.daos.UsuarioDAO;
 import com.victor1669.models.UsuarioModel;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class UsuarioService extends GenericService<UsuarioModel> {
+public class UsuarioService extends GenericService<UsuarioModel, Integer> {
+
+    @Override
+    protected GenericDAO<UsuarioModel, Integer> getDao() throws SQLException {
+        return new UsuarioDAO(ConexaoMySQL.getInstancia().getConexao());
+    }
 
     @Override
     public ValidationResult create(UsuarioModel usuario) throws SQLException {
@@ -17,33 +20,8 @@ public class UsuarioService extends GenericService<UsuarioModel> {
         if (nome == null || nome.isBlank() || senha == null || senha.isBlank()) {
             return ValidationResult.INVALID_FIELDS;
         }
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
-        usuarioDAO.insert(usuario);
+        getDao().insert(usuario);
         return ValidationResult.SUCCESS;
-    }
-
-    @Override
-    public List<UsuarioModel> getAll() throws SQLException {
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
-        List<UsuarioModel> lista = usuarioDAO.selectAll();
-        return lista != null ? lista : new ArrayList<>();
-    }
-
-    @Override
-    public void delete(int itemId) throws SQLException {
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
-        usuarioDAO.delete(itemId);
-    }
-
-    @Override
-    public UsuarioModel getByField(String field, String value) throws SQLException {
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
-
-        return usuarioDAO.selectByField(field, value);
     }
 
     public LoginResult login(String nome, String senha) throws SQLException {
@@ -59,5 +37,4 @@ public class UsuarioService extends GenericService<UsuarioModel> {
         }
         return LoginResult.SUCCESS;
     }
-
 }

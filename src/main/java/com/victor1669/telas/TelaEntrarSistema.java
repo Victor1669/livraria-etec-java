@@ -103,6 +103,7 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
             LoginResult resultado = service.login(campoNome.getText(), campoSenha.getText());
             switch (resultado) {
                 case SUCCESS -> {
+                    LocalStorage.delete("userName");
                     LocalStorage.save("userName", campoNome.getText());
                     ScreenManager.navegarPara(Tela.INICIAL);
                 }

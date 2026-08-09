@@ -2,13 +2,16 @@ package com.victor1669.services;
 
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.FuncionarioDAO;
+import com.victor1669.daos.GenericDAO;
 import com.victor1669.models.FuncionarioModel;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class FuncionarioService extends GenericService<FuncionarioModel> {
+public class FuncionarioService extends GenericService<FuncionarioModel, Integer> {
+
+    @Override
+    protected GenericDAO<FuncionarioModel, Integer> getDao() throws SQLException {
+        return new FuncionarioDAO(ConexaoMySQL.getInstancia().getConexao());
+    }
 
     @Override
     public ValidationResult create(FuncionarioModel funcionario) throws SQLException {
@@ -18,30 +21,7 @@ public class FuncionarioService extends GenericService<FuncionarioModel> {
         if (nome == null || nome.isBlank() || salario == 0 || tipo == null || tipo.isBlank()) {
             return ValidationResult.INVALID_FIELDS;
         }
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        FuncionarioDAO funcionarioDAO = new FuncionarioDAO(conn);
-        funcionarioDAO.insert(funcionario);
+        getDao().insert(funcionario);
         return ValidationResult.SUCCESS;
     }
-
-    @Override
-    public List<FuncionarioModel> getAll() throws SQLException {
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        FuncionarioDAO funcionarioDAO = new FuncionarioDAO(conn);
-        List<FuncionarioModel> lista = funcionarioDAO.selectAll();
-        return lista != null ? lista : new ArrayList<>();
-    }
-
-    @Override
-    public void delete(int itemId) throws SQLException {
-        Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        FuncionarioDAO funcionarioDAO = new FuncionarioDAO(conn);
-        funcionarioDAO.delete(itemId);
-    }
-
-    @Override
-    public FuncionarioModel getByField(String field, String value) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

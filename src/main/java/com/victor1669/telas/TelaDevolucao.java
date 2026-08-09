@@ -2,6 +2,7 @@ package com.victor1669.telas;
 
 import com.victor1669.models.EmprestimoModel;
 import com.victor1669.services.EmprestimoService;
+import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
 import java.awt.event.ComponentAdapter;
@@ -31,7 +32,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getAll();
+            lista = service.getAllByField("nome_usuario", LocalStorage.get("userName"));
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
