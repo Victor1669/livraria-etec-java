@@ -1,7 +1,6 @@
 package com.victor1669.services;
 
 import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.GenericDAO;
 import com.victor1669.daos.UsuarioDAO;
 import com.victor1669.models.UsuarioModel;
 import java.sql.SQLException;
@@ -9,7 +8,7 @@ import java.sql.SQLException;
 public class UsuarioService extends GenericService<UsuarioModel, Integer> {
 
     @Override
-    protected GenericDAO<UsuarioModel, Integer> getDao() throws SQLException {
+    protected UsuarioDAO getDao() throws SQLException {
         return new UsuarioDAO(ConexaoMySQL.getInstancia().getConexao());
     }
 

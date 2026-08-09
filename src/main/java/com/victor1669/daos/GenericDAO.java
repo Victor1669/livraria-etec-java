@@ -1,6 +1,7 @@
 package com.victor1669.daos;
 
 import com.victor1669.interfaces.IGenericDAO;
+import com.victor1669.models.EmprestimoModel;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

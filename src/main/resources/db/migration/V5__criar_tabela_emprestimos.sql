@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS emprestimos(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nome_usuario VARCHAR(30) NOT NULL,
-    nome_livro VARCHAR(30) NOT NULL,
+    id_usuario INT NOT NULL,
+    id_livro INT NOT NULL,
     data_emprestimo TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    FOREIGN KEY (nome_usuario)
-    REFERENCES usuarios(nome)
+    FOREIGN KEY (id_usuario)
+    REFERENCES usuarios(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE,
 
-    FOREIGN KEY (nome_livro)
-    REFERENCES livros(nome)
+    FOREIGN KEY (id_livro)
+    REFERENCES livros(id)
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );

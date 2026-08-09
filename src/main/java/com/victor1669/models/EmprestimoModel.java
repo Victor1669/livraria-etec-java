@@ -3,14 +3,14 @@ package com.victor1669.models;
 public class EmprestimoModel {
 
     protected int id;
-    protected String nome_usuario;
-    protected String nome_livro;
+    protected int id_usuario;
+    protected int id_livro;
     protected String data_emprestimo;
 
-    public EmprestimoModel(int id, String nome_usuario, String nome_livro, String data_emprestimo) {
+    public EmprestimoModel(int id, int id_usuario, int id_livro, String data_emprestimo) {
         this.id = id;
-        this.nome_usuario = nome_usuario;
-        this.nome_livro = nome_livro;
+        this.id_usuario = id_usuario;
+        this.id_livro = id_livro;
         this.data_emprestimo = data_emprestimo;
     }
 
@@ -25,20 +25,20 @@ public class EmprestimoModel {
         this.id = id;
     }
 
-    public String getNome_usuario() {
-        return nome_usuario;
+    public int getId_usuario() {
+        return id_usuario;
     }
 
-    public void setNome_usuario(String nome_usuario) {
-        this.nome_usuario = nome_usuario;
+    public void setId_usuario(int id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
-    public String getNome_livro() {
-        return nome_livro;
+    public int getId_livro() {
+        return id_livro;
     }
 
-    public void setNome_livro(String nome_livro) {
-        this.nome_livro = nome_livro;
+    public void setId_livro(int id_livro) {
+        this.id_livro = id_livro;
     }
 
     public String getData_emprestimo() {
@@ -51,7 +51,7 @@ public class EmprestimoModel {
 
     @Override
     public String toString() {
-        return "EmprestimoModel{" + "id=" + id + ", nome_usuario=" + nome_usuario + ", nome_livro=" + nome_livro + ", data_emprestimo=" + data_emprestimo + '}';
+        return "EmprestimoModel{" + "id=" + id + ", id_usuario=" + id_usuario + ", id_livro=" + id_livro + ", data_emprestimo=" + data_emprestimo + '}';
     }
 
 }

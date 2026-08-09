@@ -1,6 +1,6 @@
 package com.victor1669.telas;
 
-import com.victor1669.models.EmprestimoModel;
+import com.victor1669.models.EmprestimoFormatado;
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
@@ -8,13 +8,14 @@ import com.victor1669.utils.Tela;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class TelaDevolucao extends javax.swing.JPanel {
 
-    List<EmprestimoModel> lista;
+    List<EmprestimoFormatado> lista;
 
     public TelaDevolucao() {
         initComponents();
@@ -32,13 +33,13 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getAllByField("nome_usuario", LocalStorage.get("userName"));
+            lista = service.getAllEmprestimos(LocalStorage.get("userName"));
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
-            for (EmprestimoModel em : lista) {
-                Object[] linha = {em.getNome_livro(), em.getNome_usuario(), em.getData_emprestimo()};
+            for (EmprestimoFormatado em : lista) {
+                Object[] linha = {em.getNome_usuario(), em.getNome_livro(), em.getData_emprestimo()};
                 model.addRow(linha);
             }
 
@@ -157,7 +158,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Selecione um empréstimo para devolver!");
             return;
         }
-        EmprestimoModel em = lista.get(linhaSelecionada);
+        EmprestimoFormatado em = lista.get(linhaSelecionada);
         try {
             service.delete(em.getId());
             JOptionPane.showMessageDialog(null, "Livro devolvido com sucesso!");

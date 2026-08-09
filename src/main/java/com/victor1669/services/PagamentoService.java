@@ -1,7 +1,6 @@
 package com.victor1669.services;
 
 import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.GenericDAO;
 import com.victor1669.daos.PagamentoDAO;
 import com.victor1669.models.PagamentoModel;
 import java.sql.SQLException;
@@ -9,7 +8,7 @@ import java.sql.SQLException;
 public class PagamentoService extends GenericService<PagamentoModel, Integer> {
 
     @Override
-    protected GenericDAO<PagamentoModel, Integer> getDao() throws SQLException {
+    protected PagamentoDAO getDao() throws SQLException {
         return new PagamentoDAO(ConexaoMySQL.getInstancia().getConexao());
     }
 

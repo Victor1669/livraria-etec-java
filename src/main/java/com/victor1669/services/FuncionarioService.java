@@ -2,14 +2,13 @@ package com.victor1669.services;
 
 import com.victor1669.conexoes.ConexaoMySQL;
 import com.victor1669.daos.FuncionarioDAO;
-import com.victor1669.daos.GenericDAO;
 import com.victor1669.models.FuncionarioModel;
 import java.sql.SQLException;
 
 public class FuncionarioService extends GenericService<FuncionarioModel, Integer> {
 
     @Override
-    protected GenericDAO<FuncionarioModel, Integer> getDao() throws SQLException {
+    protected FuncionarioDAO getDao() throws SQLException {
         return new FuncionarioDAO(ConexaoMySQL.getInstancia().getConexao());
     }
 

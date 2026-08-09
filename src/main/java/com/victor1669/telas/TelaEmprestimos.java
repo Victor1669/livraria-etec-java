@@ -7,7 +7,6 @@ import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.LivroService;
 import com.victor1669.services.ValidationResult;
 
-import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
 
@@ -145,19 +144,20 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
     private void emprestimoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emprestimoButtonActionPerformed
         EmprestimoService emprestimoService = new EmprestimoService();
-        String userName = LocalStorage.get("userName");
+
         try {
             int linhaSelecionada = tabelaLivros.getSelectedRow();
             LivroModel lm = lista.get(linhaSelecionada);
             EmprestimoModel em = new EmprestimoModel();
-            em.setNome_livro(lm.getNome());
-            em.setNome_usuario(userName);
+
+            em.setId_livro(lm.getId());
+            em.setId_usuario(1);
             ValidationResult resultado = emprestimoService.create(em);
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o empréstimo: dados inválidos.");
                 return;
             }
-            JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + userName + "!");
+            JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + "User" + "!");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo de livro: " + e);
         }
