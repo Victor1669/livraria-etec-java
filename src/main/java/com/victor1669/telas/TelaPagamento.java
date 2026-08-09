@@ -123,7 +123,7 @@ public final class TelaPagamento extends javax.swing.JPanel {
         PagamentoService service = new PagamentoService();
 
         try {
-            List<PagamentoModel> lista = service.getItems();
+            List<PagamentoModel> lista = service.getAll();
 
             int total = lista.stream().mapToInt(PagamentoModel::getValorTotal).sum();
 

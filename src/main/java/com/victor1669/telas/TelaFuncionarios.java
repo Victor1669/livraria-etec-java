@@ -1,11 +1,12 @@
 package com.victor1669.telas;
 
-import com.victor1669.classes.Bibliotecario;
-import com.victor1669.classes.Gerente;
+import com.victor1669.models.Bibliotecario;
+import com.victor1669.models.Gerente;
 import com.victor1669.models.FuncionarioModel;
 import com.victor1669.models.PagamentoModel;
 import com.victor1669.services.FuncionarioService;
 import com.victor1669.services.PagamentoService;
+import com.victor1669.services.ValidationResult;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -172,21 +173,6 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         FuncionarioService service = new FuncionarioService();
-
-        service.onInvalid = () -> {
-            JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
-        };
-
-        service.onSuccess = () -> {
-            JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
-
-            campoNome.setText("");
-            campoSalario.setText("");
-            selectTipoFuncionario.setSelectedIndex(0);
-
-            campoNome.requestFocus();
-        };
-
         try {
             String nome = campoNome.getText();
             double salario = Double.parseDouble(campoSalario.getText());
@@ -196,12 +182,23 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
                     ? new Gerente(nome, salario)
                     : new Bibliotecario(nome, salario);
 
-            service.criar(fm);
+            ValidationResult resultado = service.create(fm);
+
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
+
+            campoNome.setText("");
+            campoSalario.setText("");
+            selectTipoFuncionario.setSelectedIndex(0);
+            campoNome.requestFocus();
         } catch (SQLException | NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
             return;
         }
-
         atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
@@ -209,8 +206,7 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
         FuncionarioService service = new FuncionarioService();
 
         try {
-            lista = service.getItems();
-
+            lista = service.getAll();
             String[] colunas = {"Nome", "Cargo"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
@@ -222,14 +218,11 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
             tabelaFuncionarios.setModel(model);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
-
         }
-
     }
 
     private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
         int linhaSelecionada = tabelaFuncionarios.getSelectedRow();
-
         FuncionarioModel fm = lista.get(linhaSelecionada);
 
         PagamentoService service = new PagamentoService();
@@ -241,14 +234,17 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
         pm.setValorTotal((int) totalPago);
 
         try {
-            service.criar(pm);
+            ValidationResult resultado = service.create(pm);
 
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Não foi possível processar o pagamento: dados inválidos.");
+                return;
+            }
             JOptionPane.showMessageDialog(null, "Pagamento realizado com sucesso!");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao pagar funcionário " + fm.getNome() + ": " + e.getMessage());
         }
     }//GEN-LAST:event_pagamentoButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;

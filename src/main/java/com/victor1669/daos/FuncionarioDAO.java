@@ -1,8 +1,8 @@
 package com.victor1669.daos;
 
-import com.victor1669.classes.Bibliotecario;
+import com.victor1669.models.Bibliotecario;
 import com.victor1669.models.FuncionarioModel;
-import com.victor1669.classes.Gerente;
+import com.victor1669.models.Gerente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,23 +15,23 @@ public class FuncionarioDAO extends GenericDAO<FuncionarioModel, Integer> {
     }
 
     @Override
-    protected String gerarStringDeInsert() {
+    protected String buildInsertQuery() {
         return "INSERT INTO " + tableName + " (nome, salario, tipoFuncionario) VALUES (?, ?, ?)";
     }
 
     @Override
-    protected void configurarParametrosDeInsert(PreparedStatement ps, FuncionarioModel funcionario) throws SQLException {
+    protected void setInsertParameters(PreparedStatement ps, FuncionarioModel funcionario) throws SQLException {
         ps.setString(1, funcionario.getNome());
         ps.setDouble(2, funcionario.getSalario());
         ps.setString(3, funcionario.getTipoFuncionario());
     }
 
     @Override
-    protected FuncionarioModel transformarLinhaSQLEmObjeto(ResultSet rs) throws SQLException {
+    protected FuncionarioModel mapRowToEntity(ResultSet rs) throws SQLException {
         String tipoFuncionario = rs.getString("tipoFuncionario");
 
-        FuncionarioModel funcionario = tipoFuncionario.equalsIgnoreCase("gerente") 
-                ? new Gerente() 
+        FuncionarioModel funcionario = tipoFuncionario.equalsIgnoreCase("gerente")
+                ? new Gerente()
                 : new Bibliotecario();
 
         funcionario.setId(rs.getInt("id"));

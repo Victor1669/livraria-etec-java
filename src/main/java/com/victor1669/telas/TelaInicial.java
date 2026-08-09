@@ -136,7 +136,6 @@ public final class TelaInicial extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_resetDatabaseActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton devolucaoLink;
     private javax.swing.JButton emprestimoLink;

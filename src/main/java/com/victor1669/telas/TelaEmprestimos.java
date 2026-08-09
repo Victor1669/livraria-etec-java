@@ -5,6 +5,7 @@ import com.victor1669.models.LivroModel;
 
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.LivroService;
+import com.victor1669.services.ValidationResult;
 
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
@@ -39,7 +40,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         LivroService service = new LivroService();
 
         try {
-            lista = service.getItems();
+            lista = service.getAll();
 
             String[] colunas = {"Livro", "Autor"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
@@ -63,7 +64,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
         cancelarButton = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        cancelarButton1 = new javax.swing.JButton();
+        emprestimoButton = new javax.swing.JButton();
         scrollTabelaLivros = new javax.swing.JScrollPane();
         tabelaLivros = new javax.swing.JTable();
 
@@ -77,9 +78,9 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Empréstimo de livros");
 
-        cancelarButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        cancelarButton1.setText("Realizar empréstimo");
-        cancelarButton1.addActionListener(this::cancelarButton1ActionPerformed);
+        emprestimoButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        emprestimoButton.setText("Realizar empréstimo");
+        emprestimoButton.addActionListener(this::emprestimoButtonActionPerformed);
 
         tabelaLivros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -119,7 +120,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
                         .addGap(603, 603, 603)
                         .addComponent(cancelarButton)
                         .addGap(18, 18, 18)
-                        .addComponent(cancelarButton1))
+                        .addComponent(emprestimoButton))
                     .addComponent(scrollTabelaLivros))
                 .addGap(33, 33, 33))
         );
@@ -132,7 +133,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
                 .addComponent(scrollTabelaLivros, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelarButton1)
+                    .addComponent(emprestimoButton)
                     .addComponent(cancelarButton))
                 .addGap(26, 26, 26))
         );
@@ -142,36 +143,29 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButtonActionPerformed
 
-    private void cancelarButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButton1ActionPerformed
+    private void emprestimoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_emprestimoButtonActionPerformed
         EmprestimoService emprestimoService = new EmprestimoService();
-
         String userName = LocalStorage.get("userName");
-
         try {
-
-            // LIVRO SELECIONADO
             int linhaSelecionada = tabelaLivros.getSelectedRow();
             LivroModel lm = lista.get(linhaSelecionada);
-
-            // CRIAÇÃO DO EMPRÉSTIMO
-            emprestimoService.onSuccess = () -> {
-                JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + userName + "!");
-            };
-
             EmprestimoModel em = new EmprestimoModel();
             em.setNome_livro(lm.getNome());
             em.setNome_usuario(userName);
-
-            emprestimoService.criar(em);
+            ValidationResult resultado = emprestimoService.create(em);
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o empréstimo: dados inválidos.");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + userName + "!");
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo de livro: " + e);
         }
-    }//GEN-LAST:event_cancelarButton1ActionPerformed
-
+    }//GEN-LAST:event_emprestimoButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelarButton;
-    private javax.swing.JButton cancelarButton1;
+    private javax.swing.JButton emprestimoButton;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane scrollTabelaLivros;
     private javax.swing.JTable tabelaLivros;

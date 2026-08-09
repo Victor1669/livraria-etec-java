@@ -2,6 +2,7 @@ package com.victor1669.telas;
 
 import com.victor1669.models.LivroModel;
 import com.victor1669.services.LivroService;
+import com.victor1669.services.ValidationResult;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
 
@@ -18,14 +19,12 @@ public final class TelaLivros extends javax.swing.JPanel {
 
     public TelaLivros() {
         initComponents();
-
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {
                 super.componentShown(e);
                 atualizarTabela();
             }
-
         });
     }
 
@@ -148,25 +147,19 @@ public final class TelaLivros extends javax.swing.JPanel {
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         LivroService service = new LivroService();
 
-        service.onInvalid = () -> {
-            JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
-        };
-
-        service.onSuccess = () -> {
-            JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
-
-            campoNome.setText("");
-            campoAutor.setText("");
-
-            campoNome.requestFocus();
-        };
-
         try {
             LivroModel lm = new LivroModel();
             lm.setNome(campoNome.getText());
             lm.setAutor(campoAutor.getText());
-
-            service.criar(lm);
+            ValidationResult resultado = service.create(lm);
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
+            campoNome.setText("");
+            campoAutor.setText("");
+            campoNome.requestFocus();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro: " + e.getMessage());
         }
@@ -176,24 +169,18 @@ public final class TelaLivros extends javax.swing.JPanel {
 
     public void atualizarTabela() {
         LivroService service = new LivroService();
-
         try {
-            List<LivroModel> lista = service.getItems();
-
+            List<LivroModel> lista = service.getAll();
             String[] colunas = {"Nome", "Autor"};
             var model = new DefaultTableModel(colunas, 0);
-
             for (LivroModel lm : lista) {
                 Object[] linha = {lm.getNome(), lm.getAutor()};
                 model.addRow(linha);
             }
-
             tabelaLivros.setModel(model);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
-
         }
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

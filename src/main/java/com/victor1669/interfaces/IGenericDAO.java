@@ -5,10 +5,10 @@ import java.util.List;
 
 public interface IGenericDAO<T, ID> {
 
-    void inserir(T entity) throws SQLException;
+    void insert(T entity) throws SQLException;
 
-    List<T> selecionarTodos() throws SQLException;
+    List<T> selectAll() throws SQLException;
 
-    void deletar(ID id) throws SQLException;
+    void delete(ID id) throws SQLException;
 
 }

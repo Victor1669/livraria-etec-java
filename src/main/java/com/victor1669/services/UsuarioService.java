@@ -5,71 +5,59 @@ import com.victor1669.daos.UsuarioDAO;
 import com.victor1669.models.UsuarioModel;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsuarioService extends GenericService<UsuarioModel> {
 
     @Override
-    public void criar(UsuarioModel um) throws SQLException {
-        String nome = um.getNome();
-        String senha = um.getSenha();
-
+    public ValidationResult create(UsuarioModel usuario) throws SQLException {
+        String nome = usuario.getNome();
+        String senha = usuario.getSenha();
         if (nome == null || nome.isBlank() || senha == null || senha.isBlank()) {
-            onInvalid.run();
-            return;
+            return ValidationResult.INVALID_FIELDS;
         }
-
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO udao = new UsuarioDAO(conn);
-
-        udao.inserir(um);
-
-        onSuccess.run();
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
+        usuarioDAO.insert(usuario);
+        return ValidationResult.SUCCESS;
     }
 
     @Override
-    public List<UsuarioModel> getItems() throws SQLException {
+    public List<UsuarioModel> getAll() throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO udao = new UsuarioDAO(conn);
-
-        return udao.selecionarTodos();
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
+        List<UsuarioModel> lista = usuarioDAO.selectAll();
+        return lista != null ? lista : new ArrayList<>();
     }
-    
+
     @Override
-    public void deleteItem(int itemId) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public UsuarioModel getUserById(int id) throws SQLException {
+    public void delete(int itemId) throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO udao = new UsuarioDAO(conn);
-
-        return udao.selecionarPorCampo("id", Integer.toString(id));
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
+        usuarioDAO.delete(itemId);
     }
 
-    public UsuarioModel getUserByName(String name) throws SQLException {
+    @Override
+    public UsuarioModel getByField(String field, String value) throws SQLException {
         Connection conn = ConexaoMySQL.getInstancia().getConexao();
-        UsuarioDAO udao = new UsuarioDAO(conn);
+        UsuarioDAO usuarioDAO = new UsuarioDAO(conn);
 
-        return udao.selecionarPorCampo("nome", name);
+        return usuarioDAO.selectByField(field, value);
     }
 
-    public void login(String nome, String senha) throws SQLException {
+    public LoginResult login(String nome, String senha) throws SQLException {
         if (nome == null || nome.isBlank() || senha == null || senha.isBlank()) {
-            onInvalid.run();
-            return;
+            return LoginResult.INVALID_FIELDS;
         }
-
-        UsuarioModel user = getUserByName(nome);
-
-        if (user != null) {
-            if (user.getSenha().equals(senha)) {
-                onSuccess.run();
-            } else {
-                throw new SQLException("Senha incorreta!");
-            }
-        } else {
-            throw new SQLException("Usuário não existente");
+        UsuarioModel user = getByField("nome", nome);
+        if (user == null) {
+            return LoginResult.USER_NOT_FOUND;
         }
+        if (!user.getSenha().equals(senha)) {
+            return LoginResult.WRONG_PASSWORD;
+        }
+        return LoginResult.SUCCESS;
     }
+
 }

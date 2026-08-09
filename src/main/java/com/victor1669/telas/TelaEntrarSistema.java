@@ -1,7 +1,9 @@
 package com.victor1669.telas;
 
 import com.victor1669.models.UsuarioModel;
+import com.victor1669.services.LoginResult;
 import com.victor1669.services.UsuarioService;
+import com.victor1669.services.ValidationResult;
 
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
@@ -97,19 +99,20 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
 
     private void entrarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entrarButtonActionPerformed
         UsuarioService service = new UsuarioService();
-
-        service.onSuccess = () -> {
-            LocalStorage.save("userName", campoNome.getText());
-
-            ScreenManager.navegarPara(Tela.INICIAL);
-        };
-
-        service.onInvalid = () -> {
-            JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!");
-        };
-
         try {
-            service.login(campoNome.getText(), campoSenha.getText());
+            LoginResult resultado = service.login(campoNome.getText(), campoSenha.getText());
+            switch (resultado) {
+                case SUCCESS -> {
+                    LocalStorage.save("userName", campoNome.getText());
+                    ScreenManager.navegarPara(Tela.INICIAL);
+                }
+                case INVALID_FIELDS ->
+                    JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!");
+                case WRONG_PASSWORD ->
+                    JOptionPane.showMessageDialog(null, "Senha incorreta!");
+                case USER_NOT_FOUND ->
+                    JOptionPane.showMessageDialog(null, "Usuário não existente!");
+            }
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao realizar login: " + e.getMessage());
         }
@@ -117,31 +120,26 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         UsuarioService service = new UsuarioService();
-
-        UsuarioModel um = new UsuarioModel();
-        um.setNome(campoNome.getText());
-        um.setSenha(campoSenha.getText());
-
-        service.onSuccess = () -> {
+        UsuarioModel usuario = new UsuarioModel();
+        usuario.setNome(campoNome.getText());
+        usuario.setSenha(campoSenha.getText());
+        try {
+            ValidationResult resultado = service.create(usuario);
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!");
+                return;
+            }
             JOptionPane.showMessageDialog(null, "Usuário criado com sucesso!");
             ScreenManager.navegarPara(Tela.INICIAL);
-        };
-
-        try {
-            service.criar(um);
         } catch (SQLException e) {
             if (e.getSQLState().equals("23000")) {
                 JOptionPane.showMessageDialog(null, "Este nome está em uso!");
             } else {
                 JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário no servidor: " + e.getMessage());
-
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário: " + e.getMessage());
         }
 
     }//GEN-LAST:event_cadastroButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;

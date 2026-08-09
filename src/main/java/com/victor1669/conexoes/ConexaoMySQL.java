@@ -32,7 +32,7 @@ public class ConexaoMySQL {
 
         flyway.repair();
         flyway.migrate();
-        
+
         if (instancia != null) {
             throw new IllegalStateException("Já existe uma instância de ConexaoMySQL!");
         }

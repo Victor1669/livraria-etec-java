@@ -31,7 +31,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getItems();
+            lista = service.getAll();
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
@@ -151,29 +151,24 @@ public class TelaDevolucao extends javax.swing.JPanel {
 
     private void devolucaoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_devolucaoButtonActionPerformed
         EmprestimoService service = new EmprestimoService();
-
         int linhaSelecionada = tabelaEmprestimos.getSelectedRow();
-
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um empréstimo para devolver!");
+            return;
+        }
         EmprestimoModel em = lista.get(linhaSelecionada);
-
-        service.onSuccess = () -> {
+        try {
+            service.delete(em.getId());
             JOptionPane.showMessageDialog(null, "Livro devolvido com sucesso!");
             atualizarTabela();
-        };
-
-        try {
-            service.deleteItem(em.getId());
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "Erro ao devolver o livro: " + e.getMessage());
         }
-
-
     }//GEN-LAST:event_devolucaoButtonActionPerformed
 
     private void cancelarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarButtonActionPerformed
         ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cancelarButton;

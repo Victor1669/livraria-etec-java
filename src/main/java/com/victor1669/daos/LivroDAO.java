@@ -13,26 +13,21 @@ public class LivroDAO extends GenericDAO<LivroModel, Integer> {
     }
 
     @Override
-    protected String gerarStringDeInsert() {
+    protected String buildInsertQuery() {
         return "INSERT INTO " + tableName + " (nome, autor) VALUES (?, ?)";
     }
 
     @Override
-    protected void configurarParametrosDeInsert(PreparedStatement ps, LivroModel livro) throws SQLException {
+    protected void setInsertParameters(PreparedStatement ps, LivroModel livro) throws SQLException {
         ps.setString(1, livro.getNome());
         ps.setString(2, livro.getAutor());
     }
 
     @Override
-    protected LivroModel transformarLinhaSQLEmObjeto(ResultSet rs) throws SQLException {
+    protected LivroModel mapRowToEntity(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String autor = rs.getString("autor");
-
-        LivroModel livro = new LivroModel(id, nome, autor);
-
-        return livro;
-
+        return new LivroModel(id, nome, autor);
     }
-
 }

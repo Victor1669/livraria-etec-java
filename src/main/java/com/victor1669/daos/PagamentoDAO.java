@@ -13,18 +13,18 @@ public class PagamentoDAO extends GenericDAO<PagamentoModel, Integer> {
     }
 
     @Override
-    protected String gerarStringDeInsert() {
+    protected String buildInsertQuery() {
         return "INSERT INTO " + tableName + " (id_funcionario, totalPago) VALUES (?, ?)";
     }
 
     @Override
-    protected void configurarParametrosDeInsert(PreparedStatement ps, PagamentoModel pagamento) throws SQLException {
+    protected void setInsertParameters(PreparedStatement ps, PagamentoModel pagamento) throws SQLException {
         ps.setInt(1, pagamento.getId_funcionario());
         ps.setDouble(2, pagamento.getValorTotal());
     }
 
     @Override
-    protected PagamentoModel transformarLinhaSQLEmObjeto(ResultSet rs) throws SQLException {
+    protected PagamentoModel mapRowToEntity(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
         int idFuncionario = rs.getInt("id_funcionario");
         int valorTotal = rs.getInt("totalPago");

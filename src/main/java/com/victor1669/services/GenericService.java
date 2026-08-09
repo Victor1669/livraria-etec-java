@@ -5,12 +5,11 @@ import java.util.List;
 
 public abstract class GenericService<T> {
 
-    public Runnable onSuccess;
-    public Runnable onInvalid;
+    public abstract ValidationResult create(T model) throws SQLException;
 
-    public abstract void criar(T model) throws SQLException;
+    public abstract List<T> getAll() throws SQLException;
 
-    public abstract List<T> getItems() throws SQLException;
+    public abstract void delete(int itemId) throws SQLException;
 
-    public abstract void deleteItem(int itemId) throws SQLException;
+    public abstract T getByField(String field, String value) throws SQLException;
 }

@@ -9,7 +9,7 @@ public enum Tela {
     PAGAMENTO("PAGAMENTO"),
     CONSULTA("CONSULTA"),
     ENTRAR_SISTEMA("ENTRAR_SISTEMA");
-    
+
     private final String nome;
 
     Tela(String nome) {

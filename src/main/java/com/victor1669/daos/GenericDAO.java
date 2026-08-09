@@ -16,28 +16,28 @@ public abstract class GenericDAO<T, ID> implements IGenericDAO<T, ID> {
     }
 
     @Override
-    public void inserir(T entity) throws SQLException {
-        String sql = gerarStringDeInsert();
+    public void insert(T entity) throws SQLException {
+        String sql = buildInsertQuery();
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            configurarParametrosDeInsert(ps, entity);
+            setInsertParameters(ps, entity);
             ps.executeUpdate();
         }
     }
 
     @Override
-    public List<T> selecionarTodos() throws SQLException {
+    public List<T> selectAll() throws SQLException {
         String sql = "SELECT * FROM " + tableName;
-        List<T> lista = new ArrayList<>();
+        List<T> list = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                lista.add(transformarLinhaSQLEmObjeto(rs));
+                list.add(mapRowToEntity(rs));
             }
         }
-        return lista;
+        return list;
     }
 
     @Override
-    public void deletar(ID id) throws SQLException {
+    public void delete(ID id) throws SQLException {
         String sql = "DELETE FROM " + tableName + " WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setObject(1, id);
@@ -45,22 +45,22 @@ public abstract class GenericDAO<T, ID> implements IGenericDAO<T, ID> {
         }
     }
 
-    public T selecionarPorCampo(String coluna, String valor) throws SQLException {
-        String sql = "SELECT * FROM " + tableName + " WHERE " + coluna + " = ?";
+    public T selectByField(String column, String value) throws SQLException {
+        String sql = "SELECT * FROM " + tableName + " WHERE " + column + " = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setObject(1, valor);
+            stmt.setObject(1, value);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return transformarLinhaSQLEmObjeto(rs);
+                    return mapRowToEntity(rs);
                 }
                 return null;
             }
         }
     }
 
-    protected abstract String gerarStringDeInsert();
+    protected abstract String buildInsertQuery();
 
-    protected abstract void configurarParametrosDeInsert(PreparedStatement ps, T entity) throws SQLException;
+    protected abstract void setInsertParameters(PreparedStatement ps, T entity) throws SQLException;
 
-    protected abstract T transformarLinhaSQLEmObjeto(ResultSet rs) throws SQLException;
+    protected abstract T mapRowToEntity(ResultSet rs) throws SQLException;
 }

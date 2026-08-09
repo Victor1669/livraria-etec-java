@@ -98,7 +98,6 @@ public class TelaUsuarios extends javax.swing.JPanel {
         ScreenManager.navegarPara(Tela.INICIAL);
     }//GEN-LAST:event_cancelarButton1ActionPerformed
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;
     private java.awt.TextField campoTitulo;

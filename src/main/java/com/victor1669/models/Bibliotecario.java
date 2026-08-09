@@ -1,4 +1,4 @@
-package com.victor1669.classes;
+package com.victor1669.models;
 
 import com.victor1669.models.FuncionarioModel;
 
