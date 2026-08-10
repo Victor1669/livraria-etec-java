@@ -5,11 +5,13 @@ public class LivroModel {
     protected int id;
     protected String nome;
     protected String autor;
+    protected int quantidade;
 
-    public LivroModel(int id, String titulo, String author) {
+    public LivroModel(int id, String nome, String autor, int quantidade) {
         this.id = id;
-        this.nome = titulo;
-        this.autor = author;
+        this.nome = nome;
+        this.autor = autor;
+        this.quantidade = quantidade;
     }
 
     public LivroModel() {
@@ -37,5 +39,13 @@ public class LivroModel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
     }
 }

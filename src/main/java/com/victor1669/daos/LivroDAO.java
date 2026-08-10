@@ -14,13 +14,14 @@ public class LivroDAO extends GenericDAO<LivroModel, Integer> {
 
     @Override
     protected String buildInsertQuery() {
-        return "INSERT INTO " + tableName + " (nome, autor) VALUES (?, ?)";
+        return "INSERT INTO " + tableName + " (nome, autor, quantidade) VALUES (?, ?, ?)";
     }
 
     @Override
     protected void setInsertParameters(PreparedStatement ps, LivroModel livro) throws SQLException {
         ps.setString(1, livro.getNome());
         ps.setString(2, livro.getAutor());
+        ps.setInt(3, livro.getQuantidade());
     }
 
     @Override
@@ -28,6 +29,7 @@ public class LivroDAO extends GenericDAO<LivroModel, Integer> {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String autor = rs.getString("autor");
-        return new LivroModel(id, nome, autor);
+        int quantidade = rs.getInt("quantidade");
+        return new LivroModel(id, nome, autor, quantidade);
     }
 }

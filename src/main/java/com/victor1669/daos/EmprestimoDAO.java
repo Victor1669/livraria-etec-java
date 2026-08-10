@@ -46,20 +46,17 @@ public class EmprestimoDAO extends GenericDAO<EmprestimoModel, Integer> {
 
     public List<EmprestimoFormatado> selectAllEmprestimosWithNames(String nome) throws SQLException {
         String sql = """
-                     SELECT em.id AS id, u.nome AS nome_usuario, l.nome AS nome_livro, em.data_emprestimo
-                     FROM emprestimos em
-                     JOIN usuarios u
-                     \tON em.id_usuario = u.id
-                     JOIN livros l 
-                     \tON em.id_livro = l.id
-                     WHERE (u.nome = ?);""";
-
-        List<EmprestimoFormatado> list;
-        list = new ArrayList<>();
-
+                 SELECT em.id AS id, u.nome AS nome_usuario, l.nome AS nome_livro, em.data_emprestimo
+                 FROM emprestimos em
+                 JOIN usuarios u
+                 \tON em.id_usuario = u.id
+                 JOIN livros l 
+                 \tON em.id_livro = l.id
+                 WHERE (? IS NULL OR u.nome = ?);""";
+        List<EmprestimoFormatado> list = new ArrayList<>();
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, nome);
-
+            stmt.setString(2, nome);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     list.add(mapRowToFormattedEntity(rs));

@@ -19,10 +19,9 @@ public abstract class GenericService<T, ID> {
     public void delete(ID itemId) throws SQLException {
         getDao().delete(itemId);
     }
-    
+
     public T getByField(String field, String value) throws SQLException {
-        T lista = getDao().selectByField(field, value);
-        return lista;
+        return getDao().selectByField(field, value);
     }
 
     public List<T> getAllByField(String field, String value) throws SQLException {

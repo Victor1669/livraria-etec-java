@@ -16,13 +16,29 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
 
     @Override
     public ValidationResult create(EmprestimoModel emprestimo) throws SQLException {
-        int id_usuario = emprestimo.getId_usuario();
-        int id_livro = emprestimo.getId_livro();
-        if (id_usuario == -1 || id_livro == -1) {
+        int idUsuario = emprestimo.getId_usuario();
+        int idLivro = emprestimo.getId_livro();
+        if (idUsuario == -1 || idLivro == -1) {
+            return ValidationResult.INVALID_FIELDS;
+        }
+        LivroService livroService = new LivroService();
+        ValidationResult resultadoEmprestimo = livroService.emprestarLivro(idLivro);
+        if (resultadoEmprestimo == ValidationResult.INVALID_FIELDS) {
             return ValidationResult.INVALID_FIELDS;
         }
         getDao().insert(emprestimo);
         return ValidationResult.SUCCESS;
+    }
+
+    @Override
+    public void delete(Integer itemId) throws SQLException {
+        EmprestimoModel emprestimo = getByField("id", Integer.toString(itemId));
+        if (emprestimo == null) {
+            return;
+        }
+        LivroService livroService = new LivroService();
+        livroService.devolverLivro(emprestimo.getId_livro());
+        super.delete(itemId);
     }
 
     public List<EmprestimoFormatado> getAllEmprestimos(String nome) throws SQLException {
