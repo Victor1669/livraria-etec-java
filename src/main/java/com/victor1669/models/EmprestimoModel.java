@@ -16,13 +16,13 @@ public class EmprestimoModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "id_usuario", nullable = false)
+    @Column(name = "idUsuario", nullable = false)
     private Integer idUsuario;
 
-    @Column(name = "id_livro", nullable = false)
+    @Column(name = "idLivro", nullable = false)
     private Integer idLivro;
 
-    @Column(name = "data_emprestimo", insertable = false, updatable = false)
+    @Column(name = "dataEmprestimo", insertable = false, updatable = false)
     private java.time.LocalDateTime dataEmprestimo;
 
     public EmprestimoModel() {

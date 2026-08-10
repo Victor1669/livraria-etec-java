@@ -16,13 +16,13 @@ public class PagamentoModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "id_funcionario", nullable = false)
+    @Column(name = "idFuncionario", nullable = false)
     private Integer idFuncionario;
 
     @Column(name = "totalPago", nullable = false, columnDefinition = "DECIMAL(10,2)")
     private Double totalPago;
 
-    @Column(name = "data_transacao")
+    @Column(name = "dataTransacao")
     private LocalDateTime dataTransacao;
 
     public PagamentoModel() {
