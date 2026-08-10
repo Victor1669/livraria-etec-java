@@ -240,7 +240,7 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
         PagamentoModel pm = new PagamentoModel();
         pm.setIdFuncionario(fm.getId());
-        pm.setValorTotal(totalPago);
+        pm.setTotalPago(totalPago);
 
         try {
             ValidationResult resultado = service.cadastrar(pm);

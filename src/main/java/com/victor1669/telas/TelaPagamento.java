@@ -1,5 +1,6 @@
 package com.victor1669.telas;
 
+import com.victor1669.dtos.PagamentoFormatado;
 import com.victor1669.models.PagamentoModel;
 import com.victor1669.services.PagamentoService;
 import com.victor1669.utils.ScreenManager;
@@ -7,7 +8,6 @@ import com.victor1669.utils.Tela;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import java.sql.SQLException;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -50,14 +50,14 @@ public final class TelaPagamento extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "ID_Funcionario", "Total pago"
+                "ID", "Nome do funcionario", "Total pago", "Data Transação"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -123,18 +123,18 @@ public final class TelaPagamento extends javax.swing.JPanel {
         PagamentoService service = new PagamentoService();
 
         try {
-            List<PagamentoModel> lista = service.listarTodos();
+            List<PagamentoFormatado> lista = service.getAllPagamentos();
 
             Double total = lista.stream()
-                    .mapToDouble(PagamentoModel::getValorTotal)
+                    .mapToDouble(PagamentoFormatado::getTotalPago)
                     .sum();
             totalLabel.setText(Double.toString(total));
 
-            String[] colunas = {"ID", "ID Funcionário", "Total pago"};
+            String[] colunas = {"ID", "Nome do funcionário", "Total pago", "Data transação"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
-            for (PagamentoModel p : lista) {
-                Object[] linha = {p.getId(), p.getIdFuncionario(), p.getValorTotal()};
+            for (PagamentoFormatado p : lista) {
+                Object[] linha = {p.getId(), p.getNomeFuncionario(), p.getTotalPago(), p.getDataTransacao()};
                 model.addRow(linha);
             }
 

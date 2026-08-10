@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pagamentos")
@@ -19,18 +20,21 @@ public class PagamentoModel {
     private Integer idFuncionario;
 
     @Column(name = "totalPago", nullable = false, columnDefinition = "DECIMAL(10,2)")
-    private Double valorTotal;
+    private Double totalPago;
+
+    @Column(name = "data_transacao")
+    private LocalDateTime dataTransacao;
 
     public PagamentoModel() {
     }
 
-    public PagamentoModel(int id, int idFuncionario, Double valorTotal) {
+    public PagamentoModel(int id, int idFuncionario, Double totalPago, LocalDateTime dataTransacao) {
         this.id = id;
         this.idFuncionario = idFuncionario;
-        this.valorTotal = valorTotal;
+        this.totalPago = totalPago;
+        this.dataTransacao = dataTransacao;
     }
 
-    // Getters e Setters
     public Integer getId() {
         return id;
     }
@@ -47,11 +51,19 @@ public class PagamentoModel {
         this.idFuncionario = idFuncionario;
     }
 
-    public Double getValorTotal() {
-        return valorTotal;
+    public Double getTotalPago() {
+        return totalPago;
     }
 
-    public void setValorTotal(Double valorTotal) {
-        this.valorTotal = valorTotal;
+    public void setTotalPago(Double totalPago) {
+        this.totalPago = totalPago;
+    }
+
+    public LocalDateTime getDataTransacao() {
+        return dataTransacao;
+    }
+
+    public void setDataTransacao(LocalDateTime dataTransacao) {
+        this.dataTransacao = dataTransacao;
     }
 }
