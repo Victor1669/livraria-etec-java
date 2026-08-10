@@ -3,10 +3,10 @@ package com.victor1669.telas;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
-import java.sql.SQLException;
 import com.victor1669.conexoes.*;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
+import jakarta.persistence.PersistenceException;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -21,7 +21,6 @@ public class MainForm extends javax.swing.JFrame {
     final void mountComponents() {
         setLocationRelativeTo(null);
         cardLayout = new CardLayout();
-
         container = new JPanel(cardLayout);
         container.add(new TelaInicial(), Tela.INICIAL.getNome());
         container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
@@ -31,37 +30,29 @@ public class MainForm extends javax.swing.JFrame {
         container.add(new TelaDevolucao(), Tela.DEVOLUCAO.getNome());
         container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
         container.add(new TelaEntrarSistema(), Tela.ENTRAR_SISTEMA.getNome());
-
         getContentPane().setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
-
         ScreenManager.inicializar(this, container, cardLayout);
         ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
     }
 
-    static final void connectMySQL() {
-
-        ConexaoMySQL conexaoMySQL = new ConexaoMySQL();
-
+    static final void connectJPA() {
         try {
-            conexaoMySQL.conectar();
-            conexaoMySQL.usarBanco();
+            ConexaoJPA.getInstancia();
             System.out.println("Conectou com sucesso!");
-        } catch (SQLException ex) {
-            System.out.println("Erro ao conectar no MySQL: " + ex.getMessage());
+        } catch (PersistenceException ex) {
+            System.out.println("Erro ao conectar no banco: " + ex.getMessage());
         }
     }
 
     public static void main(String args[]) {
-        connectMySQL();
-
+        connectJPA();
         java.awt.EventQueue.invokeLater(() -> {
             MainForm form = new MainForm();
             form.setVisible(true);
         });
-
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            ConexaoMySQL.getInstancia().fecharConexao();
+            ConexaoJPA.getInstancia().encerrar();
         }));
     }
 

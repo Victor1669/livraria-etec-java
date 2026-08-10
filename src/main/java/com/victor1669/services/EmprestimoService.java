@@ -1,47 +1,71 @@
 package com.victor1669.services;
 
-import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.EmprestimoDAO;
-import com.victor1669.models.EmprestimoFormatado;
+import com.victor1669.services.results.ValidationResult;
+import com.victor1669.conexoes.ConexaoJPA;
+import com.victor1669.dtos.EmprestimoFormatado;
 import com.victor1669.models.EmprestimoModel;
-import java.sql.SQLException;
 import java.util.List;
 
 public class EmprestimoService extends GenericService<EmprestimoModel, Integer> {
 
-    @Override
-    protected EmprestimoDAO getDao() throws SQLException {
-        return new EmprestimoDAO(ConexaoMySQL.getInstancia().getConexao());
+    public EmprestimoService() {
+        super(EmprestimoModel.class);
     }
 
-    @Override
-    public ValidationResult create(EmprestimoModel emprestimo) throws SQLException {
-        int idUsuario = emprestimo.getId_usuario();
-        int idLivro = emprestimo.getId_livro();
-        if (idUsuario == -1 || idLivro == -1) {
+    public ValidationResult cadastrar(EmprestimoModel emprestimo) {
+        Integer idUsuario = emprestimo.getIdUsuario();
+        Integer idLivro = emprestimo.getIdLivro();
+
+        if (idUsuario == null || idUsuario <= 0 || idLivro == null || idLivro <= 0) {
             return ValidationResult.INVALID_FIELDS;
         }
+
         LivroService livroService = new LivroService();
         ValidationResult resultadoEmprestimo = livroService.emprestarLivro(idLivro);
+
         if (resultadoEmprestimo == ValidationResult.INVALID_FIELDS) {
             return ValidationResult.INVALID_FIELDS;
         }
-        getDao().insert(emprestimo);
-        return ValidationResult.SUCCESS;
+
+        try {
+            super.create(emprestimo);
+            return ValidationResult.SUCCESS;
+        } catch (Exception e) {
+            livroService.devolverLivro(idLivro);
+            throw new RuntimeException("Erro ao criar empréstimo", e);
+        }
     }
 
     @Override
-    public void delete(Integer itemId) throws SQLException {
-        EmprestimoModel emprestimo = getByField("id", Integer.toString(itemId));
+    public void delete(Integer id) {
+        EmprestimoModel emprestimo = getById(id);
         if (emprestimo == null) {
             return;
         }
-        LivroService livroService = new LivroService();
-        livroService.devolverLivro(emprestimo.getId_livro());
-        super.delete(itemId);
+
+        Integer idLivro = emprestimo.getIdLivro();
+        super.delete(id);
+        new LivroService().devolverLivro(idLivro);
     }
 
-    public List<EmprestimoFormatado> getAllEmprestimos(String nome) throws SQLException {
-        return getDao().selectAllEmprestimosWithNames(nome);
+    public List<EmprestimoFormatado> getAllEmprestimos(String nome) {
+        return ConexaoJPA.getInstancia().execute(em -> {
+            String jpql = """
+                            SELECT NEW com.victor1669.dtos.EmprestimoFormatado(
+                                e.id,
+                                u.nome,
+                                l.nome,
+                                CAST(e.dataEmprestimo AS string)
+                            )
+                            FROM EmprestimoModel e
+                            JOIN UsuarioModel u ON e.idUsuario = u.id
+                            JOIN LivroModel l ON e.idLivro = l.id
+                            WHERE (:nome IS NULL OR :nome = '' OR u.nome = :nome)
+                            """;
+
+            return em.createQuery(jpql, EmprestimoFormatado.class)
+                    .setParameter("nome", nome)
+                    .getResultList();
+        });
     }
 }

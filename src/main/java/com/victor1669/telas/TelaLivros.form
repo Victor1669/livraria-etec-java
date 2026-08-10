@@ -78,9 +78,9 @@
                   <Component id="jLabel4" pref="31" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cadastroButton" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="cancelarButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Component id="cadastroButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="192" max="-2" attributes="0"/>

@@ -1,50 +1,69 @@
 package com.victor1669.services;
 
-import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.LivroDAO;
+import com.victor1669.services.results.ValidationResult;
+import com.victor1669.conexoes.ConexaoJPA;
 import com.victor1669.models.LivroModel;
-import java.sql.SQLException;
 
 public class LivroService extends GenericService<LivroModel, Integer> {
 
-    @Override
-    protected LivroDAO getDao() throws SQLException {
-        return new LivroDAO(ConexaoMySQL.getInstancia().getConexao());
+    public LivroService() {
+        super(LivroModel.class);
     }
 
-    @Override
-    public ValidationResult create(LivroModel livro) throws SQLException {
-        String nome = livro.getNome();
-        String autor = livro.getAutor();
-        int quantidade = livro.getQuantidade();
-        if (nome == null || nome.isBlank() || autor == null || autor.isBlank() || quantidade <= 0) {
+    public ValidationResult cadastrar(LivroModel livro) {
+        if (livro.getNome() == null || livro.getNome().isBlank()
+                || livro.getAutor() == null || livro.getAutor().isBlank()
+                || livro.getQuantidade() == null || livro.getQuantidade() <= 0) {
             return ValidationResult.INVALID_FIELDS;
         }
-        getDao().insert(livro);
+
+        super.create(livro);
         return ValidationResult.SUCCESS;
     }
 
-    public ValidationResult emprestarLivro(int id) throws SQLException {
-        LivroModel livro = getByField("id", Integer.toString(id));
-        if (livro == null || livro.getQuantidade() <= 0) {
-            return ValidationResult.INVALID_FIELDS;
-        }
-        UpdateParam[] params = new UpdateParam[]{
-            new UpdateParam("quantidade", Integer.toString(livro.getQuantidade() - 1))
-        };
-        getDao().update(id, params);
-        return ValidationResult.SUCCESS;
+    public ValidationResult emprestarLivro(int id) {
+        return ConexaoJPA.getInstancia().execute(em -> {
+            em.getTransaction().begin();
+            try {
+                LivroModel livro = em.find(LivroModel.class, id);
+
+                if (livro == null || livro.getQuantidade() <= 0) {
+                    em.getTransaction().rollback();
+                    return ValidationResult.INVALID_FIELDS;
+                }
+
+                livro.setQuantidade(livro.getQuantidade() - 1);
+                em.getTransaction().commit();
+                return ValidationResult.SUCCESS;
+            } catch (Exception e) {
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+                throw e;
+            }
+        });
     }
 
-    public ValidationResult devolverLivro(int id) throws SQLException {
-        LivroModel livro = getByField("id", Integer.toString(id));
-        if (livro == null) {
-            return ValidationResult.INVALID_FIELDS;
-        }
-        UpdateParam[] params = new UpdateParam[]{
-            new UpdateParam("quantidade", Integer.toString(livro.getQuantidade() + 1))
-        };
-        getDao().update(id, params);
-        return ValidationResult.SUCCESS;
+    public ValidationResult devolverLivro(int id) {
+        return ConexaoJPA.getInstancia().execute(em -> {
+            em.getTransaction().begin();
+            try {
+                LivroModel livro = em.find(LivroModel.class, id);
+
+                if (livro == null) {
+                    em.getTransaction().rollback();
+                    return ValidationResult.INVALID_FIELDS;
+                }
+
+                livro.setQuantidade(livro.getQuantidade() + 1);
+                em.getTransaction().commit();
+                return ValidationResult.SUCCESS;
+            } catch (Exception e) {
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+                throw e;
+            }
+        });
     }
 }

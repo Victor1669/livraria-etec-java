@@ -1,57 +1,83 @@
 package com.victor1669.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "emprestimos")
 public class EmprestimoModel {
 
-    protected int id;
-    protected int id_usuario;
-    protected int id_livro;
-    protected String data_emprestimo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    public EmprestimoModel(int id, int id_usuario, int id_livro, String data_emprestimo) {
-        this.id = id;
-        this.id_usuario = id_usuario;
-        this.id_livro = id_livro;
-        this.data_emprestimo = data_emprestimo;
-    }
+    @Column(name = "id_usuario", nullable = false)
+    private Integer idUsuario;
+
+    @Column(name = "id_livro", nullable = false)
+    private Integer idLivro;
+
+    @Column(name = "data_emprestimo", insertable = false, updatable = false)
+    private java.time.LocalDateTime dataEmprestimo;
 
     public EmprestimoModel() {
     }
 
-    public int getId() {
+    public EmprestimoModel(int id, int idUsuario, int idLivro, String dataEmprestimo) {
+        this.id = id;
+        this.idUsuario = idUsuario;
+        this.idLivro = idLivro;
+        if (dataEmprestimo != null) {
+            this.dataEmprestimo = LocalDateTime.parse(dataEmprestimo.replace(" ", "T"));
+        }
+    }
+
+    public EmprestimoModel(Integer idUsuario, Integer idLivro) {
+        this.idUsuario = idUsuario;
+        this.idLivro = idLivro;
+    }
+
+    // Getters e Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getId_usuario() {
-        return id_usuario;
+    public Integer getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(int id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Integer idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
-    public int getId_livro() {
-        return id_livro;
+    public Integer getIdLivro() {
+        return idLivro;
     }
 
-    public void setId_livro(int id_livro) {
-        this.id_livro = id_livro;
+    public void setIdLivro(Integer idLivro) {
+        this.idLivro = idLivro;
     }
 
-    public String getData_emprestimo() {
-        return data_emprestimo;
+    public LocalDateTime getDataEmprestimo() {
+        return dataEmprestimo;
     }
 
-    public void setData_emprestimo(String data_emprestimo) {
-        this.data_emprestimo = data_emprestimo;
+    public void setDataEmprestimo(LocalDateTime dataEmprestimo) {
+        this.dataEmprestimo = dataEmprestimo;
     }
 
     @Override
     public String toString() {
-        return "EmprestimoModel{" + "id=" + id + ", id_usuario=" + id_usuario + ", id_livro=" + id_livro + ", data_emprestimo=" + data_emprestimo + '}';
+        return "EmprestimoModel{id=" + id + ", idUsuario=" + idUsuario
+                + ", idLivro=" + idLivro + ", dataEmprestimo=" + dataEmprestimo + '}';
     }
-
 }

@@ -1,4 +1,4 @@
-package com.victor1669.services;
+package com.victor1669.services.results;
 
 public enum LoginResult {
     SUCCESS,

@@ -123,26 +123,25 @@ public final class TelaPagamento extends javax.swing.JPanel {
         PagamentoService service = new PagamentoService();
 
         try {
-            List<PagamentoModel> lista = service.getAll();
+            List<PagamentoModel> lista = service.listarTodos();
 
-            int total = lista.stream().mapToInt(PagamentoModel::getValorTotal).sum();
+            Double total = lista.stream()
+                    .mapToDouble(PagamentoModel::getValorTotal)
+                    .sum();
+            totalLabel.setText(Double.toString(total));
 
-            totalLabel.setText(Integer.toString(total));
-
-            String[] colunas = {"ID", "ID_Funcionario", "Total pago"};
+            String[] colunas = {"ID", "ID Funcionário", "Total pago"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
             for (PagamentoModel p : lista) {
-                Object[] linha = {p.getId(), p.getId_funcionario(), p.getValorTotal()};
+                Object[] linha = {p.getId(), p.getIdFuncionario(), p.getValorTotal()};
                 model.addRow(linha);
             }
 
             tabelaPagamentos.setModel(model);
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
         }
-
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

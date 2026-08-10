@@ -1,15 +1,14 @@
 package com.victor1669.telas;
 
 import com.victor1669.models.UsuarioModel;
-import com.victor1669.services.LoginResult;
+import com.victor1669.services.results.LoginResult;
 import com.victor1669.services.UsuarioService;
-import com.victor1669.services.ValidationResult;
+import com.victor1669.services.results.ValidationResult;
 
-import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
+import java.awt.HeadlessException;
 
-import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
 public class TelaEntrarSistema extends javax.swing.JPanel {
@@ -42,7 +41,7 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
 
         entrarButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         entrarButton.setText("Entrar");
-        entrarButton.addActionListener(this::entrarButtonActionPerformed);
+        entrarButton.addActionListener(this::login);
 
         cadastroButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         cadastroButton.setText("Cadastrar");
@@ -97,14 +96,16 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void entrarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entrarButtonActionPerformed
+    void handleLogin() {
         UsuarioService service = new UsuarioService();
+        String nome = campoNome.getText();
+        String senha = campoSenha.getText();
+
         try {
-            LoginResult resultado = service.login(campoNome.getText(), campoSenha.getText());
+            LoginResult resultado = service.login(nome, senha);
+
             switch (resultado) {
                 case SUCCESS -> {
-                    LocalStorage.delete("userName");
-                    LocalStorage.save("userName", campoNome.getText());
                     ScreenManager.navegarPara(Tela.INICIAL);
                 }
                 case INVALID_FIELDS ->
@@ -114,33 +115,46 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
                 case USER_NOT_FOUND ->
                     JOptionPane.showMessageDialog(null, "Usuário não existente!");
             }
-        } catch (SQLException e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao realizar login: " + e.getMessage());
         }
-    }//GEN-LAST:event_entrarButtonActionPerformed
+    }
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         UsuarioService service = new UsuarioService();
+        String nome = campoNome.getText();
+        String senha = campoSenha.getText();
+
         UsuarioModel usuario = new UsuarioModel();
-        usuario.setNome(campoNome.getText());
-        usuario.setSenha(campoSenha.getText());
+        usuario.setNome(nome);
+        usuario.setSenha(senha);
+
         try {
-            ValidationResult resultado = service.create(usuario);
+            ValidationResult resultado = service.cadastrar(usuario);
+
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!");
                 return;
             }
+
             JOptionPane.showMessageDialog(null, "Usuário criado com sucesso!");
-            ScreenManager.navegarPara(Tela.INICIAL);
-        } catch (SQLException e) {
-            if (e.getSQLState().equals("23000")) {
+
+            handleLogin();
+
+        } catch (HeadlessException e) {
+            Throwable cause = e.getCause();
+            if (cause != null && cause.getMessage() != null
+                    && cause.getMessage().toLowerCase().contains("duplicate")) {
                 JOptionPane.showMessageDialog(null, "Este nome está em uso!");
             } else {
-                JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário no servidor: " + e.getMessage());
+                JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário: " + e.getMessage());
             }
         }
-
     }//GEN-LAST:event_cadastroButtonActionPerformed
+
+    private void login(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login
+        handleLogin();
+    }//GEN-LAST:event_login
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;

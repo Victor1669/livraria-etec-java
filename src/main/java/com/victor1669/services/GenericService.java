@@ -1,31 +1,41 @@
 package com.victor1669.services;
 
-import com.victor1669.daos.GenericDAO;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.victor1669.conexoes.ConexaoJPA;
 import java.util.List;
 
 public abstract class GenericService<T, ID> {
 
-    protected abstract GenericDAO<T, ID> getDao() throws SQLException;
+    private final Class<T> entityClass;
 
-    public abstract ValidationResult create(T model) throws SQLException;
-
-    public List<T> getAll() throws SQLException {
-        List<T> lista = getDao().selectAll();
-        return lista != null ? lista : new ArrayList<>();
+    protected GenericService(Class<T> entityClass) {
+        this.entityClass = entityClass;
     }
 
-    public void delete(ID itemId) throws SQLException {
-        getDao().delete(itemId);
+    public void create(T entity) {
+        ConexaoJPA.getInstancia().executeInTransaction(em -> em.persist(entity));
     }
 
-    public T getByField(String field, String value) throws SQLException {
-        return getDao().selectByField(field, value);
+    public T getById(ID id) {
+        return ConexaoJPA.getInstancia().execute(em -> em.find(entityClass, id));
     }
 
-    public List<T> getAllByField(String field, String value) throws SQLException {
-        List<T> lista = getDao().selectAllByField(field, value);
-        return lista != null ? lista : new ArrayList<>();
+    public List<T> listarTodos() {
+        return ConexaoJPA.getInstancia().execute(em
+                -> em.createQuery("SELECT e FROM " + entityClass.getSimpleName() + " e", entityClass)
+                        .getResultList()
+        );
+    }
+
+    public void update(T entity) {
+        ConexaoJPA.getInstancia().executeInTransaction(em -> em.merge(entity));
+    }
+
+    public void delete(ID id) {
+        ConexaoJPA.getInstancia().executeInTransaction(em -> {
+            T entity = em.find(entityClass, id);
+            if (entity != null) {
+                em.remove(entity);
+            }
+        });
     }
 }

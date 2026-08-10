@@ -1,42 +1,57 @@
 package com.victor1669.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "pagamentos")
 public class PagamentoModel {
 
-    private int id;
-    private int id_funcionario;
-    private int valorTotal;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    public PagamentoModel(int id, int id_funcionario, int valorTotal) {
-        this.id = id;
-        this.id_funcionario = id_funcionario;
-        this.valorTotal = valorTotal;
-    }
+    @Column(name = "id_funcionario", nullable = false)
+    private Integer idFuncionario;
+
+    @Column(name = "totalPago", nullable = false, columnDefinition = "DECIMAL(10,2)")
+    private Double valorTotal;
 
     public PagamentoModel() {
     }
 
-    // ==================== GETTERS E SETTERS ====================
-    public int getId() {
+    public PagamentoModel(int id, int idFuncionario, Double valorTotal) {
+        this.id = id;
+        this.idFuncionario = idFuncionario;
+        this.valorTotal = valorTotal;
+    }
+
+    // Getters e Setters
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getId_funcionario() {
-        return id_funcionario;
+    public Integer getIdFuncionario() {
+        return idFuncionario;
     }
 
-    public void setId_funcionario(int id_funcionario) {
-        this.id_funcionario = id_funcionario;
+    public void setIdFuncionario(Integer idFuncionario) {
+        this.idFuncionario = idFuncionario;
     }
 
-    public int getValorTotal() {
+    public Double getValorTotal() {
         return valorTotal;
     }
 
-    public void setValorTotal(int valorTotal) {
+    public void setValorTotal(Double valorTotal) {
         this.valorTotal = valorTotal;
     }
 }

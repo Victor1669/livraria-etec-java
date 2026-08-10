@@ -1,6 +1,6 @@
 package com.victor1669.telas;
 
-import com.victor1669.conexoes.ConexaoMySQL;
+import com.victor1669.conexoes.ConexaoJPA;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
 import java.util.Map;
@@ -127,9 +127,8 @@ public final class TelaInicial extends javax.swing.JPanel {
 
     private void resetDatabaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetDatabaseActionPerformed
         int response = JOptionPane.showConfirmDialog(null, "Certeza de que quer reiniciar o banco de dados?");
-
         if (response == JOptionPane.YES_OPTION) {
-            ConexaoMySQL.getInstancia().resetarBanco(() -> {
+            ConexaoJPA.getInstancia().resetarBanco(() -> {
                 JOptionPane.showMessageDialog(null, "Banco reiniciado com sucesso!");
                 System.exit(0);
             });

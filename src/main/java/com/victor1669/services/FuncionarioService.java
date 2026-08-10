@@ -1,26 +1,35 @@
 package com.victor1669.services;
 
-import com.victor1669.conexoes.ConexaoMySQL;
-import com.victor1669.daos.FuncionarioDAO;
+import com.victor1669.services.results.ValidationResult;
+import com.victor1669.conexoes.ConexaoJPA;
 import com.victor1669.models.FuncionarioModel;
-import java.sql.SQLException;
+import java.util.List;
 
 public class FuncionarioService extends GenericService<FuncionarioModel, Integer> {
 
-    @Override
-    protected FuncionarioDAO getDao() throws SQLException {
-        return new FuncionarioDAO(ConexaoMySQL.getInstancia().getConexao());
+    public FuncionarioService() {
+        super(FuncionarioModel.class);
     }
 
-    @Override
-    public ValidationResult create(FuncionarioModel funcionario) throws SQLException {
+    public ValidationResult cadastrar(FuncionarioModel funcionario) {
         String nome = funcionario.getNome();
-        double salario = funcionario.getSalario();
-        String tipo = funcionario.getTipoFuncionario();
-        if (nome == null || nome.isBlank() || salario == 0 || tipo == null || tipo.isBlank()) {
+        Double salario = funcionario.getSalario();
+
+        if (nome == null || nome.isBlank() || salario == null || salario <= 0) {
             return ValidationResult.INVALID_FIELDS;
         }
-        getDao().insert(funcionario);
+
+        super.create(funcionario);
         return ValidationResult.SUCCESS;
+    }
+
+    public List<FuncionarioModel> listarPorTipo(String tipo) {
+        return ConexaoJPA.getInstancia().execute(em
+                -> em.createQuery(
+                        "SELECT f FROM FuncionarioModel f WHERE TYPE(f) = :tipo",
+                        FuncionarioModel.class)
+                        .setParameter("tipo", tipo)
+                        .getResultList()
+        );
     }
 }

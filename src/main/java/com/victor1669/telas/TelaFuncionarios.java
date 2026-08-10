@@ -6,12 +6,12 @@ import com.victor1669.models.FuncionarioModel;
 import com.victor1669.models.PagamentoModel;
 import com.victor1669.services.FuncionarioService;
 import com.victor1669.services.PagamentoService;
-import com.victor1669.services.ValidationResult;
-import java.sql.SQLException;
+import com.victor1669.services.results.ValidationResult;
 import java.util.List;
 
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
+import java.awt.HeadlessException;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JOptionPane;
@@ -173,6 +173,7 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
         FuncionarioService service = new FuncionarioService();
+
         try {
             String nome = campoNome.getText();
             double salario = Double.parseDouble(campoSalario.getText());
@@ -182,7 +183,7 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
                     ? new Gerente(nome, salario)
                     : new Bibliotecario(nome, salario);
 
-            ValidationResult resultado = service.create(fm);
+            ValidationResult resultado = service.cadastrar(fm);
 
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
@@ -190,23 +191,26 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
             }
 
             JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
-
             campoNome.setText("");
             campoSalario.setText("");
             selectTipoFuncionario.setSelectedIndex(0);
             campoNome.requestFocus();
-        } catch (SQLException | NumberFormatException e) {
+
+            atualizarTabela();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Salário inválido!");
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
-            return;
         }
-        atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
     public void atualizarTabela() {
         FuncionarioService service = new FuncionarioService();
 
         try {
-            lista = service.getAll();
+            lista = service.listarTodos();
+
             String[] colunas = {"Nome", "Cargo"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
@@ -216,32 +220,38 @@ public final class TelaFuncionarios extends javax.swing.JPanel {
             }
 
             tabelaFuncionarios.setModel(model);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
         }
     }
 
     private void pagamentoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pagamentoButtonActionPerformed
         int linhaSelecionada = tabelaFuncionarios.getSelectedRow();
-        FuncionarioModel fm = lista.get(linhaSelecionada);
 
+        if (linhaSelecionada == -1) {
+            JOptionPane.showMessageDialog(null, "Selecione um funcionário para pagar!");
+            return;
+        }
+
+        FuncionarioModel fm = lista.get(linhaSelecionada);
         PagamentoService service = new PagamentoService();
 
         double totalPago = fm.processarPagamento();
 
         PagamentoModel pm = new PagamentoModel();
-        pm.setId_funcionario(fm.getId());
-        pm.setValorTotal((int) totalPago);
+        pm.setIdFuncionario(fm.getId());
+        pm.setValorTotal(totalPago);
 
         try {
-            ValidationResult resultado = service.create(pm);
+            ValidationResult resultado = service.cadastrar(pm);
 
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Não foi possível processar o pagamento: dados inválidos.");
                 return;
             }
+
             JOptionPane.showMessageDialog(null, "Pagamento realizado com sucesso!");
-        } catch (SQLException e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao pagar funcionário " + fm.getNome() + ": " + e.getMessage());
         }
     }//GEN-LAST:event_pagamentoButtonActionPerformed

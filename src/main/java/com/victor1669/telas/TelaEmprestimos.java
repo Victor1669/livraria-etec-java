@@ -5,15 +5,16 @@ import com.victor1669.models.LivroModel;
 
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.LivroService;
-import com.victor1669.services.ValidationResult;
+import com.victor1669.services.results.ValidationResult;
+import com.victor1669.utils.LocalStorage;
 
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
+import java.awt.HeadlessException;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -39,7 +40,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
         LivroService service = new LivroService();
 
         try {
-            lista = service.getAll();
+            lista = service.listarTodos();
 
             String[] colunas = {"Livro", "Autor"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
@@ -50,11 +51,9 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
             }
 
             tabelaLivros.setModel(model);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
-
         }
-
     }
 
     @SuppressWarnings("unchecked")
@@ -149,19 +148,30 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
         try {
             int linhaSelecionada = tabelaLivros.getSelectedRow();
-            LivroModel lm = lista.get(linhaSelecionada);
-            EmprestimoModel em = new EmprestimoModel();
 
-            em.setId_livro(lm.getId());
-            em.setId_usuario(1);
-            ValidationResult resultado = emprestimoService.create(em);
-            if (resultado == ValidationResult.INVALID_FIELDS) {
-                JOptionPane.showMessageDialog(null, "Não foi possível realizar o empréstimo: dados inválidos.");
+            if (linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(null, "Selecione um livro para emprestar!");
                 return;
             }
-            JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado para " + "User" + "!");
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo de livro: " + e);
+
+            LivroModel lm = lista.get(linhaSelecionada);
+
+            EmprestimoModel em = new EmprestimoModel();
+            em.setIdLivro(lm.getId());
+            em.setIdUsuario(Integer.valueOf(LocalStorage.get("userId")));
+
+            ValidationResult resultado = emprestimoService.cadastrar(em);
+
+            if (resultado == ValidationResult.INVALID_FIELDS) {
+                JOptionPane.showMessageDialog(null, "Não foi possível realizar o empréstimo: dados inválidos ou livro sem estoque.");
+                return;
+            }
+
+            JOptionPane.showMessageDialog(null, "Livro " + lm.getNome() + " emprestado com sucesso!");
+
+            atualizarTabela();
+        } catch (HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao realizar empréstimo de livro: " + e.getMessage());
         }
     }//GEN-LAST:event_emprestimoButtonActionPerformed
 

@@ -2,9 +2,10 @@ package com.victor1669.telas;
 
 import com.victor1669.models.LivroModel;
 import com.victor1669.services.LivroService;
-import com.victor1669.services.ValidationResult;
+import com.victor1669.services.results.ValidationResult;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.Tela;
+import java.awt.HeadlessException;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -12,8 +13,6 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 import java.util.List;
-
-import java.sql.SQLException;
 
 public final class TelaLivros extends javax.swing.JPanel {
 
@@ -148,9 +147,9 @@ public final class TelaLivros extends javax.swing.JPanel {
                     .addComponent(campoQuantidade, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
                 .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cadastroButton)
-                    .addComponent(cancelarButton))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cancelarButton, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(cadastroButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
@@ -168,37 +167,48 @@ public final class TelaLivros extends javax.swing.JPanel {
             LivroModel lm = new LivroModel();
             lm.setNome(campoNome.getText());
             lm.setAutor(campoAutor.getText());
+
             int quantidade = Integer.parseInt(campoQuantidade.getText());
             lm.setQuantidade(quantidade);
 
-            ValidationResult resultado = service.create(lm);
+            ValidationResult resultado = service.cadastrar(lm);
+
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Os campos devem ser preenchidos corretamente!");
                 return;
             }
+
             JOptionPane.showMessageDialog(null, "Livro cadastrado com sucesso!");
             campoNome.setText("");
             campoAutor.setText("");
+            campoQuantidade.setText("");
             campoNome.requestFocus();
-        } catch (SQLException e) {
+
+            atualizarTabela();
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Quantidade inválida!");
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao cadastrar livro: " + e.getMessage());
         }
-
-        atualizarTabela();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
     public void atualizarTabela() {
         LivroService service = new LivroService();
+
         try {
-            List<LivroModel> lista = service.getAll();
+            List<LivroModel> lista = service.listarTodos();
+
             String[] colunas = {"Nome", "Autor", "Quantidade"};
-            var model = new DefaultTableModel(colunas, 0);
+            DefaultTableModel model = new DefaultTableModel(colunas, 0);
+
             for (LivroModel lm : lista) {
                 Object[] linha = {lm.getNome(), lm.getAutor(), lm.getQuantidade()};
                 model.addRow(linha);
             }
+
             tabelaLivros.setModel(model);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar os dados: " + e.getMessage());
         }
     }

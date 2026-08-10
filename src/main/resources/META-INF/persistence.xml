@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <persistence-unit name="livrariaJava" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <class>com.victor1669.models.UsuarioModel</class>
+        <class>com.victor1669.models.LivroModel</class>
+        <class>com.victor1669.models.PagamentoModel</class>
+        <class>com.victor1669.models.EmprestimoModel</class>
+        <class>com.victor1669.models.FuncionarioModel</class>
+        <class>com.victor1669.models.Gerente</class>
+        <class>com.victor1669.models.Bibliotecario</class>
+        
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.hbm2ddl.auto" value="validate"/>
+            <property name="hibernate.show_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>

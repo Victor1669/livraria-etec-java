@@ -1,11 +1,31 @@
 package com.victor1669.models;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "livros")
 public class LivroModel {
 
-    protected int id;
-    protected String nome;
-    protected String autor;
-    protected int quantidade;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @Column(nullable = false, length = 200)
+    private String nome;
+
+    @Column(nullable = false, length = 150)
+    private String autor;
+
+    @Column(nullable = false)
+    private Integer quantidade;
+
+    public LivroModel() {
+    }
 
     public LivroModel(int id, String nome, String autor, int quantidade) {
         this.id = id;
@@ -14,15 +34,13 @@ public class LivroModel {
         this.quantidade = quantidade;
     }
 
-    public LivroModel() {
+    // Getters e Setters
+    public Integer getId() {
+        return id;
     }
 
-    public String getAutor() {
-        return this.autor;
-    }
-
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -33,19 +51,19 @@ public class LivroModel {
         this.nome = nome;
     }
 
-    public int getId() {
-        return id;
+    public String getAutor() {
+        return autor;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAutor(String autor) {
+        this.autor = autor;
     }
 
-    public int getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 }
