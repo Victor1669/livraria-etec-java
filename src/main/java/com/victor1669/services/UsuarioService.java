@@ -5,6 +5,7 @@ import com.victor1669.services.results.ValidationResult;
 import com.victor1669.conexoes.ConexaoJPA;
 import com.victor1669.models.UsuarioModel;
 import com.victor1669.utils.LocalStorage;
+import com.victor1669.utils.SenhaUtils;
 import jakarta.persistence.NoResultException;
 
 public class UsuarioService extends GenericService<UsuarioModel, Integer> {
@@ -13,11 +14,19 @@ public class UsuarioService extends GenericService<UsuarioModel, Integer> {
         super(UsuarioModel.class);
     }
 
-    public ValidationResult cadastrar(UsuarioModel usuario) {
-        if (usuario.getNome() == null || usuario.getNome().isBlank()
-                || usuario.getSenha() == null || usuario.getSenha().isBlank()) {
+    public ValidationResult cadastrar(String nome, String senha) {
+
+        if (nome == null || nome.isBlank()
+                || senha == null || senha.isBlank()) {
             return ValidationResult.INVALID_FIELDS;
         }
+
+        UsuarioModel usuario = new UsuarioModel();
+        usuario.setNome(nome);
+
+        String cryptedPassword = SenhaUtils.criptografar(senha);
+
+        usuario.setSenha(cryptedPassword);
 
         super.create(usuario);
         return ValidationResult.SUCCESS;
@@ -34,7 +43,9 @@ public class UsuarioService extends GenericService<UsuarioModel, Integer> {
             return LoginResult.USER_NOT_FOUND;
         }
 
-        if (!user.getSenha().equals(senha)) {
+        String cryptedPassword = user.getSenha();
+
+        if (!SenhaUtils.verificar(senha, cryptedPassword)) {
             return LoginResult.WRONG_PASSWORD;
         }
 

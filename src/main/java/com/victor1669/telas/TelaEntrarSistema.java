@@ -6,6 +6,7 @@ import com.victor1669.services.UsuarioService;
 import com.victor1669.services.results.ValidationResult;
 
 import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.SenhaUtils;
 import com.victor1669.utils.Tela;
 import java.awt.HeadlessException;
 
@@ -125,12 +126,8 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
         String nome = campoNome.getText();
         String senha = campoSenha.getText();
 
-        UsuarioModel usuario = new UsuarioModel();
-        usuario.setNome(nome);
-        usuario.setSenha(senha);
-
         try {
-            ValidationResult resultado = service.cadastrar(usuario);
+            ValidationResult resultado = service.cadastrar(nome, senha);
 
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Todos os campos devem ser preenchidos!");
