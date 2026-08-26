@@ -32,7 +32,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getAllEmprestimos(SessionManager.getNomeLogado());
+            lista = service.getEmprestimosByName(SessionManager.getNomeLogado());
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);

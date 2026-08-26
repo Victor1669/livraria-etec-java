@@ -50,7 +50,7 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
         new LivroService().devolverLivro(idLivro);
     }
 
-    public List<EmprestimoFormatado> getAllEmprestimos(String nome) {
+    public List<EmprestimoFormatado> getEmprestimosByName(String nome) {
         return ConexaoJPA.getInstancia().execute(em -> {
             String jpql = """
                             SELECT NEW com.victor1669.dtos.EmprestimoFormatado(
