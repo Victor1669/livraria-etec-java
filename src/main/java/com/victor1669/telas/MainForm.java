@@ -5,8 +5,10 @@ import java.awt.CardLayout;
 import javax.swing.JPanel;
 import com.victor1669.conexoes.*;
 import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.SessionManager;
 import com.victor1669.utils.Tela;
 import jakarta.persistence.PersistenceException;
+import javax.swing.JOptionPane;
 
 public class MainForm extends javax.swing.JFrame {
 
@@ -20,8 +22,10 @@ public class MainForm extends javax.swing.JFrame {
 
     final void mountComponents() {
         setLocationRelativeTo(null);
+
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
+
         container.add(new TelaInicial(), Tela.INICIAL.getNome());
         container.add(new TelaFuncionarios(), Tela.FUNCIONARIO.getNome());
         container.add(new TelaPagamento(), Tela.PAGAMENTO.getNome());
@@ -30,10 +34,47 @@ public class MainForm extends javax.swing.JFrame {
         container.add(new TelaDevolucao(), Tela.DEVOLUCAO.getNome());
         container.add(new TelaUsuarios(), Tela.CONSULTA.getNome());
         container.add(new TelaEntrarSistema(), Tela.ENTRAR_SISTEMA.getNome());
+
         getContentPane().setLayout(new BorderLayout());
         add(container, BorderLayout.CENTER);
+
         ScreenManager.inicializar(this, container, cardLayout);
-        ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
+
+        String token = SessionManager.getToken();
+        /* TESTES DO TOKEN
+        System.out.println("Token: " + token);
+        System.out.println("Sessão válida? " + (SessionManager.verificarSessao() ? "sim" : "não"));
+        System.out.println("Sem token? : " + (token.length() <= 0 ? "sim" : "não"));
+        System.out.println("Tamanho do token: " + token.length());
+         */
+
+        // ===== CONTROLE DE SESSÃO =====
+        if (SessionManager.verificarSessao()) {
+            System.out.println("Acessando sistema...");
+
+            ScreenManager.navegarPara(Tela.INICIAL);
+
+        } else {
+
+            if (token.isEmpty()) {
+                System.out.println("Sem token...");
+            } else {
+
+                System.out.println("Sessão inválida...");
+
+                ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
+
+                JOptionPane.showMessageDialog(null,
+                        "Sua sessão expirou. Faça login novamente.",
+                        "Sessão Expirada",
+                        JOptionPane.WARNING_MESSAGE);
+
+                return;
+            }
+
+            ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
+        }
+
     }
 
     static final void connectJPA() {

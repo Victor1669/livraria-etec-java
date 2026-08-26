@@ -1,14 +1,13 @@
 package com.victor1669.telas;
 
-import com.victor1669.models.EmprestimoModel;
 import com.victor1669.models.LivroModel;
 
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.LivroService;
 import com.victor1669.services.results.ValidationResult;
-import com.victor1669.utils.LocalStorage;
 
 import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.SessionManager;
 import com.victor1669.utils.Tela;
 import java.awt.HeadlessException;
 
@@ -156,11 +155,10 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
 
             LivroModel lm = lista.get(linhaSelecionada);
 
-            EmprestimoModel em = new EmprestimoModel();
-            em.setIdLivro(lm.getId());
-            em.setIdUsuario(Integer.valueOf(LocalStorage.get("userId")));
+            int livroId = lm.getId();
+            int usuarioId = Integer.parseInt(SessionManager.getUserIdLogado().toString());
 
-            ValidationResult resultado = emprestimoService.cadastrar(em);
+            ValidationResult resultado = emprestimoService.cadastrar(livroId, usuarioId);
 
             if (resultado == ValidationResult.INVALID_FIELDS) {
                 JOptionPane.showMessageDialog(null, "Não foi possível realizar o empréstimo: dados inválidos ou livro sem estoque.");

@@ -40,6 +40,8 @@ DB_PASSWORD=`<SENHA_BANCO>`
 
 DB_PASSWORD=`<NOME_BANCO>`
 
+JWT_TOKEN=`<STRING_DE_32_DIGITOS>`
+
 ### 3. Migrations
 
 Depois de configurar as variáveis de ambiente, é importante criar o banco na sua máquina.

@@ -4,6 +4,7 @@ import com.victor1669.dtos.EmprestimoFormatado;
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
+import com.victor1669.utils.SessionManager;
 import com.victor1669.utils.Tela;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -31,7 +32,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getAllEmprestimos(LocalStorage.get("userName"));
+            lista = service.getAllEmprestimos(SessionManager.getNomeLogado());
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);

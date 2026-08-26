@@ -4,6 +4,7 @@ import com.victor1669.services.results.LoginResult;
 import com.victor1669.services.results.ValidationResult;
 import com.victor1669.conexoes.ConexaoJPA;
 import com.victor1669.models.UsuarioModel;
+import com.victor1669.utils.JwtUtils;
 import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.SenhaUtils;
 import jakarta.persistence.NoResultException;
@@ -38,21 +39,18 @@ public class UsuarioService extends GenericService<UsuarioModel, Integer> {
         }
 
         UsuarioModel user = getByNome(nome);
-
         if (user == null) {
             return LoginResult.USER_NOT_FOUND;
         }
 
-        String cryptedPassword = user.getSenha();
-
-        if (!SenhaUtils.verificar(senha, cryptedPassword)) {
+        if (!SenhaUtils.verificar(senha, user.getSenha())) {
             return LoginResult.WRONG_PASSWORD;
         }
 
-        LocalStorage.delete("userName");
-        LocalStorage.delete("userId");
-        LocalStorage.save("userName", user.getNome());
-        LocalStorage.save("userId", String.valueOf(user.getId()));
+        String token = JwtUtils.gerarToken(Long.valueOf(user.getId()), user.getNome());
+
+        LocalStorage.delete("token");
+        LocalStorage.save("token", token);
 
         return LoginResult.SUCCESS;
     }

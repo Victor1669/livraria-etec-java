@@ -1,12 +1,10 @@
 package com.victor1669.telas;
 
-import com.victor1669.models.UsuarioModel;
 import com.victor1669.services.results.LoginResult;
 import com.victor1669.services.UsuarioService;
 import com.victor1669.services.results.ValidationResult;
 
 import com.victor1669.utils.ScreenManager;
-import com.victor1669.utils.SenhaUtils;
 import com.victor1669.utils.Tela;
 import java.awt.HeadlessException;
 

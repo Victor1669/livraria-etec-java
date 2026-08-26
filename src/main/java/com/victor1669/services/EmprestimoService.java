@@ -12,13 +12,15 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
         super(EmprestimoModel.class);
     }
 
-    public ValidationResult cadastrar(EmprestimoModel emprestimo) {
-        Integer idUsuario = emprestimo.getIdUsuario();
-        Integer idLivro = emprestimo.getIdLivro();
+    public ValidationResult cadastrar(int idLivro, int idUsuario) {
 
-        if (idUsuario == null || idUsuario <= 0 || idLivro == null || idLivro <= 0) {
+        if (idUsuario <= 0 || idLivro <= 0) {
             return ValidationResult.INVALID_FIELDS;
         }
+
+        EmprestimoModel em = new EmprestimoModel();
+        em.setIdLivro(idLivro);
+        em.setIdUsuario(idUsuario);
 
         LivroService livroService = new LivroService();
         ValidationResult resultadoEmprestimo = livroService.emprestarLivro(idLivro);
@@ -28,7 +30,7 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
         }
 
         try {
-            super.create(emprestimo);
+            super.create(em);
             return ValidationResult.SUCCESS;
         } catch (Exception e) {
             livroService.devolverLivro(idLivro);
