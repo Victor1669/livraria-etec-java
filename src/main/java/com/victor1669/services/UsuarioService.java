@@ -3,6 +3,7 @@ package com.victor1669.services;
 import com.victor1669.services.results.LoginResult;
 import com.victor1669.services.results.ValidationResult;
 import com.victor1669.conexoes.ConexaoJPA;
+import com.victor1669.dtos.UsuarioDTO;
 import com.victor1669.models.UsuarioModel;
 import com.victor1669.utils.JwtUtils;
 import com.victor1669.utils.LocalStorage;
@@ -47,7 +48,7 @@ public class UsuarioService extends GenericService<UsuarioModel, Integer> {
             return LoginResult.WRONG_PASSWORD;
         }
 
-        String token = JwtUtils.gerarToken(Long.valueOf(user.getId()), user.getNome());
+        String token = JwtUtils.gerarToken(Long.valueOf(user.getId()));
 
         LocalStorage.delete("token");
         LocalStorage.save("token", token);
@@ -67,6 +68,22 @@ public class UsuarioService extends GenericService<UsuarioModel, Integer> {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public UsuarioDTO getUserDTO(int id) {
+        return ConexaoJPA.getInstancia().execute(em -> {
+            String jpql = """
+                            SELECT NEW com.victor1669.dtos.UsuarioDTO(
+                                um.id,
+                                um.nome,
+                                um.role
+                            )
+                            FROM UsuarioModel um
+                            WHERE um.id = :id
+                            """;
+
+            return em.createQuery(jpql, UsuarioDTO.class).setParameter("id", id).getSingleResult();
+        });
     }
 
 }

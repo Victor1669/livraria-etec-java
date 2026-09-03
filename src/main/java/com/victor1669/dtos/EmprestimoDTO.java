@@ -1,16 +1,16 @@
 package com.victor1669.dtos;
 
-public class EmprestimoFormatado {
+public class EmprestimoDTO {
 
     private int id;
     private String nomeUsuario;
     private String nomeLivro;
     private String dataEmprestimo;
 
-    public EmprestimoFormatado() {
+    public EmprestimoDTO() {
     }
 
-    public EmprestimoFormatado(int id, String nomeUsuario, String nomeLivro, String dataEmprestimo) {
+    public EmprestimoDTO(int id, String nomeUsuario, String nomeLivro, String dataEmprestimo) {
         this.id = id;
         this.nomeUsuario = nomeUsuario;
         this.nomeLivro = nomeLivro;

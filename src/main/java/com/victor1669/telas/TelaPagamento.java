@@ -1,6 +1,6 @@
 package com.victor1669.telas;
 
-import com.victor1669.dtos.PagamentoFormatado;
+import com.victor1669.dtos.PagamentoDTO;
 import com.victor1669.models.PagamentoModel;
 import com.victor1669.services.PagamentoService;
 import com.victor1669.utils.ScreenManager;
@@ -123,17 +123,17 @@ public final class TelaPagamento extends javax.swing.JPanel {
         PagamentoService service = new PagamentoService();
 
         try {
-            List<PagamentoFormatado> lista = service.getAllPagamentos();
+            List<PagamentoDTO> lista = service.getAllPagamentos();
 
             Double total = lista.stream()
-                    .mapToDouble(PagamentoFormatado::getTotalPago)
+                    .mapToDouble(PagamentoDTO::getTotalPago)
                     .sum();
             totalLabel.setText(Double.toString(total));
 
             String[] colunas = {"ID", "Nome do funcionário", "Total pago", "Data transação"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
-            for (PagamentoFormatado p : lista) {
+            for (PagamentoDTO p : lista) {
                 Object[] linha = {p.getId(), p.getNomeFuncionario(), p.getTotalPago(), p.getDataTransacao()};
                 model.addRow(linha);
             }

@@ -1,11 +1,10 @@
 package com.victor1669.telas;
 
-import com.victor1669.dtos.EmprestimoFormatado;
+import com.victor1669.dtos.EmprestimoDTO;
 import com.victor1669.models.UsuarioModel;
 import com.victor1669.services.EmprestimoService;
 import com.victor1669.services.UsuarioService;
 import com.victor1669.utils.ScreenManager;
-import com.victor1669.utils.SessionManager;
 import com.victor1669.utils.Tela;
 
 import java.awt.event.ComponentAdapter;
@@ -84,7 +83,6 @@ public class TelaUsuarios extends javax.swing.JPanel {
             }
         });
         tabelaUsuarios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tabelaUsuarios.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(tabelaUsuarios);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
@@ -154,7 +152,7 @@ public class TelaUsuarios extends javax.swing.JPanel {
 
         String userName = um.getNome();
 
-        List<EmprestimoFormatado> ems = empService.getEmprestimosByName(userName);
+        List<EmprestimoDTO> ems = empService.getEmprestimosByName(userName);
 
         boolean hasLivros = !ems.isEmpty();
 

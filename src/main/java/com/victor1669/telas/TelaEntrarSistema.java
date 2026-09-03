@@ -117,6 +117,8 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Erro ao realizar login: " + e.getMessage());
         }
+
+        clearForm();
     }
 
     private void cadastroButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cadastroButtonActionPerformed
@@ -145,11 +147,18 @@ public class TelaEntrarSistema extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário: " + e.getMessage());
             }
         }
+
+        clearForm();
     }//GEN-LAST:event_cadastroButtonActionPerformed
 
     private void login(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_login
         handleLogin();
     }//GEN-LAST:event_login
+
+    private void clearForm() {
+        campoNome.setText("");
+        campoSenha.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cadastroButton;

@@ -1,20 +1,20 @@
 package com.victor1669.dtos;
 
-public class PagamentoFormatado {
+public class PagamentoDTO {
 
     private int id;
     private String nomeFuncionario;
     private double totalPago;
     private String dataTransacao;
 
-    public PagamentoFormatado(int id, String nomeFuncionario, double totalPago, String dataTransacao) {
+    public PagamentoDTO(int id, String nomeFuncionario, double totalPago, String dataTransacao) {
         this.id = id;
         this.nomeFuncionario = nomeFuncionario;
         this.totalPago = totalPago;
         this.dataTransacao = dataTransacao;
     }
 
-    public PagamentoFormatado() {
+    public PagamentoDTO() {
     }
 
     public int getId() {

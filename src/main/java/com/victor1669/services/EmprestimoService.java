@@ -2,7 +2,7 @@ package com.victor1669.services;
 
 import com.victor1669.services.results.ValidationResult;
 import com.victor1669.conexoes.ConexaoJPA;
-import com.victor1669.dtos.EmprestimoFormatado;
+import com.victor1669.dtos.EmprestimoDTO;
 import com.victor1669.models.EmprestimoModel;
 import java.util.List;
 
@@ -50,10 +50,10 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
         new LivroService().devolverLivro(idLivro);
     }
 
-    public List<EmprestimoFormatado> getEmprestimosByName(String nome) {
+    public List<EmprestimoDTO> getEmprestimosByName(String nome) {
         return ConexaoJPA.getInstancia().execute(em -> {
             String jpql = """
-                            SELECT NEW com.victor1669.dtos.EmprestimoFormatado(
+                            SELECT NEW com.victor1669.dtos.EmprestimoDTO(
                                 e.id,
                                 u.nome,
                                 l.nome,
@@ -65,7 +65,7 @@ public class EmprestimoService extends GenericService<EmprestimoModel, Integer> 
                             WHERE (:nome IS NULL OR :nome = '' OR u.nome = :nome)
                             """;
 
-            return em.createQuery(jpql, EmprestimoFormatado.class)
+            return em.createQuery(jpql, EmprestimoDTO.class)
                     .setParameter("nome", nome)
                     .getResultList();
         });

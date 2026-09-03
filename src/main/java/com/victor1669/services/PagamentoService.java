@@ -2,7 +2,7 @@ package com.victor1669.services;
 
 import com.victor1669.services.results.ValidationResult;
 import com.victor1669.conexoes.ConexaoJPA;
-import com.victor1669.dtos.PagamentoFormatado;
+import com.victor1669.dtos.PagamentoDTO;
 import com.victor1669.models.PagamentoModel;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,10 +37,10 @@ public class PagamentoService extends GenericService<PagamentoModel, Integer> {
         );
     }
 
-    public List<PagamentoFormatado> getAllPagamentos() {
+    public List<PagamentoDTO> getAllPagamentos() {
         return ConexaoJPA.getInstancia().execute(em -> {
             String jpql = """
-                            SELECT NEW com.victor1669.dtos.PagamentoFormatado(
+                            SELECT NEW com.victor1669.dtos.PagamentoDTO(
                                 p.id,
                                 f.nome,
                                 p.totalPago,
@@ -50,7 +50,7 @@ public class PagamentoService extends GenericService<PagamentoModel, Integer> {
                             JOIN FuncionarioModel f ON p.idFuncionario = f.id
                             """;
 
-            return em.createQuery(jpql, PagamentoFormatado.class)
+            return em.createQuery(jpql, PagamentoDTO.class)
                     .getResultList();
         });
     }

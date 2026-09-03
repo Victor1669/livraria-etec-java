@@ -40,6 +40,18 @@ public class MainForm extends javax.swing.JFrame {
 
         ScreenManager.inicializar(this, container, cardLayout);
 
+        String resultado = handleSession();
+
+        if (resultado.equals("INICIAL")) {
+
+            ScreenManager.navegarPara(Tela.INICIAL);
+        } else {
+            ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
+        }
+
+    }
+
+    final String handleSession() {
         String token = SessionManager.getToken();
         /* TESTES DO TOKEN
         System.out.println("Token: " + token);
@@ -48,31 +60,20 @@ public class MainForm extends javax.swing.JFrame {
         System.out.println("Tamanho do token: " + token.length());
          */
 
-        // ===== CONTROLE DE SESSÃO =====
-        if (SessionManager.verificarSessao()) {
-            System.out.println("Acessando sistema...");
+        boolean sessaoEhValida = SessionManager.verificarSessao();
 
-            ScreenManager.navegarPara(Tela.INICIAL);
+        if (sessaoEhValida) {
 
+            return "INICIAL";
         } else {
-
-            if (token.isEmpty()) {
-                System.out.println("Sem token...");
-            } else {
-
-                System.out.println("Sessão inválida...");
-
-                ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
-
+            if (!token.isEmpty()) {
                 JOptionPane.showMessageDialog(null,
                         "Sua sessão expirou. Faça login novamente.",
                         "Sessão Expirada",
                         JOptionPane.WARNING_MESSAGE);
-
-                return;
             }
 
-            ScreenManager.navegarPara(Tela.ENTRAR_SISTEMA);
+            return "ENTRAR_SISTEMA";
         }
 
     }

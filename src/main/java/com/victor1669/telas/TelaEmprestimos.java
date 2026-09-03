@@ -156,7 +156,7 @@ public final class TelaEmprestimos extends javax.swing.JPanel {
             LivroModel lm = lista.get(linhaSelecionada);
 
             int livroId = lm.getId();
-            int usuarioId = Integer.parseInt(SessionManager.getUserIdLogado().toString());
+            int usuarioId = SessionManager.User.getId();
 
             ValidationResult resultado = emprestimoService.cadastrar(livroId, usuarioId);
 

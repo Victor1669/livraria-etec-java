@@ -1,8 +1,7 @@
 package com.victor1669.telas;
 
-import com.victor1669.dtos.EmprestimoFormatado;
+import com.victor1669.dtos.EmprestimoDTO;
 import com.victor1669.services.EmprestimoService;
-import com.victor1669.utils.LocalStorage;
 import com.victor1669.utils.ScreenManager;
 import com.victor1669.utils.SessionManager;
 import com.victor1669.utils.Tela;
@@ -14,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class TelaDevolucao extends javax.swing.JPanel {
 
-    List<EmprestimoFormatado> lista;
+    List<EmprestimoDTO> lista;
 
     public TelaDevolucao() {
         initComponents();
@@ -32,12 +31,12 @@ public class TelaDevolucao extends javax.swing.JPanel {
         EmprestimoService service = new EmprestimoService();
 
         try {
-            lista = service.getEmprestimosByName(SessionManager.getNomeLogado());
+            lista = service.getEmprestimosByName(SessionManager.User.getNome());
 
             String[] colunas = {"Usuario", "Livro", "Data"};
             DefaultTableModel model = new DefaultTableModel(colunas, 0);
 
-            for (EmprestimoFormatado em : lista) {
+            for (EmprestimoDTO em : lista) {
                 Object[] linha = {
                     em.getNomeUsuario(),
                     em.getNomeLivro(),
@@ -159,7 +158,7 @@ public class TelaDevolucao extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Selecione um empréstimo para devolver!");
             return;
         }
-        EmprestimoFormatado em = lista.get(linhaSelecionada);
+        EmprestimoDTO em = lista.get(linhaSelecionada);
         service.delete(em.getId());
         JOptionPane.showMessageDialog(null, "Livro devolvido com sucesso!");
         atualizarTabela();

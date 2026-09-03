@@ -16,20 +16,19 @@ public class JwtUtils {
 
     private static final long EXPIRATION_MS = 8 * 60 * 60 * 1000;
 
-    public static String gerarToken(Long userId, String nome) {
+    public static String gerarToken(Long userId) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + EXPIRATION_MS);
 
         return Jwts.builder()
                 .subject(String.valueOf(userId))
-                .claim("nome", nome)
                 .issuedAt(agora)
                 .expiration(expiracao)
                 .signWith(KEY)
                 .compact();
     }
 
-    public static Claims validarToken(String token) {
+    static Claims validarToken(String token) {
         try {
             return Jwts.parser()
                     .verifyWith(KEY)
@@ -48,10 +47,5 @@ public class JwtUtils {
     public static Long getUserId(String token) {
         Claims claims = validarToken(token);
         return claims != null ? Long.valueOf(claims.getSubject()) : null;
-    }
-
-    public static String getNome(String token) {
-        Claims claims = validarToken(token);
-        return claims != null ? claims.get("nome", String.class) : null;
     }
 }
